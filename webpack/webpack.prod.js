@@ -24,7 +24,8 @@ const prod = {
     minimizer: [
       new CssMinimizerPlugin({
         test: /\.css$/i,
-      })
+      }),
+      '...'
     ],
     splitChunks: {
       chunks: 'async',
