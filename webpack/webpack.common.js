@@ -13,6 +13,24 @@ module.exports = {
   module: {
     rules: [
       {
+        test: /\.m?(js|ts)$/,
+        exclude: /(node_modules|bower_components)/,
+        use: {
+          loader: 'babel-loader',
+          options: {
+            presets: [
+              ['@babel/preset-env', {
+                useBuiltIns: "usage",
+                corejs: 3
+              }],
+              ['@babel/preset-typescript']
+            ],
+            plugins: ['@babel/plugin-transform-runtime'],
+            cacheDirectory: true,
+          }
+        }
+      },
+      {
         test: /\.css$/i,
         use: ['style-loader', 'css-loader'],
       },
