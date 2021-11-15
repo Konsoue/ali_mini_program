@@ -13,7 +13,7 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.m?(js|ts)$/,
+        test: /\.m?(js|ts|jsx|tsx)$/,
         exclude: /(node_modules|bower_components)/,
         use: {
           loader: 'babel-loader',
@@ -23,7 +23,9 @@ module.exports = {
                 useBuiltIns: "usage",
                 corejs: 3
               }],
-              ['@babel/preset-typescript']
+              ['@babel/preset-typescript'],
+              ['@babel/preset-react']
+
             ],
             plugins: ['@babel/plugin-transform-runtime'],
             cacheDirectory: true,
@@ -33,6 +35,14 @@ module.exports = {
       {
         test: /\.css$/i,
         use: ['style-loader', 'css-loader'],
+      },
+      {
+        test: /\.less$/i,
+        use: ['style-loader', 'css-loader', 'less-loader'],
+      },
+      {
+        test: /\.scss$/,
+        use: ['style-loader', 'css-loader', 'sass-loader'],
       },
       {
         test: /\.(png|svg|jpg|jpeg|gif|webp)$/i,
@@ -49,9 +59,15 @@ module.exports = {
     ],
   },
   output: {
+    publicPath: '/',
     filename: '[name].bundle.js',
     path: path.resolve(__dirname, '../dist'),
     clean: true,
   },
-
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname, '../src')
+    },
+    extensions: ['.js', '.jsx', 'ts', 'tsx']
+  }
 };

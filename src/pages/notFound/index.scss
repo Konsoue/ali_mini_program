@@ -1,0 +1,21 @@
+.not-found {
+  position: relative;
+  height: 100vh;
+  background-image: url('@/static/images/404.png');
+  background-size: cover;
+  text-align: center;
+  .btn {
+    position: absolute;
+    top: 55%;
+    transform: translateX(-20%)
+  }
+}
+.btn {
+  border-radius: 15px;
+  padding: 6px 20px;
+  background-color: rgb(69, 100, 117);
+  border: 1px solid transparent;
+  color: #fff;
+  letter-spacing: .1em;
+  cursor: pointer;
+}

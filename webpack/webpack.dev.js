@@ -7,6 +7,7 @@ const dev = {
   devServer: {
     static: './dist',
     hot: true,
+    historyApiFallback: true, // 这一行解决了 devServer 对 react-router-dom 的影响
   },
 }
 
