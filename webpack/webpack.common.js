@@ -7,6 +7,7 @@ module.exports = {
   },
   plugins: [
     new HtmlWebpackPlugin({
+      favicon: path.resolve(__dirname, '../src/favicon.ico'),
       template: path.resolve(__dirname, '../src/index.html'),
     }),
   ],
@@ -55,6 +56,13 @@ module.exports = {
       {
         test: /\.(htm|html)$/i,
         loader: 'html-loader',
+        options: {
+          sources: true,
+        }
+      },
+      {
+        test: /\.(mp3|cda|wav|wma|mid|midi)$/i,
+        type: 'asset/resource',
       }
     ],
   },
@@ -68,6 +76,7 @@ module.exports = {
     alias: {
       '@': path.resolve(__dirname, '../src')
     },
-    extensions: ['.js', '.jsx', 'ts', 'tsx']
+    extensions: ['.js', '.jsx', 'ts', 'tsx'],
+    roots: [__dirname, path.resolve(__dirname, '../src')]
   }
 };
