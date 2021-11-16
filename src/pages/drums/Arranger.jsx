@@ -4,10 +4,10 @@ import './Arranger.less'
 function Arranger(props) {
   const { rhythm } = props
   return (
-    <div class="content">
-      <div id="container-sequencer" class="container-sequencer">
-        <div id="sequencer" class="sequencer">
-          <div class="row" data-target-drum="crash">
+    <div className="content">
+      <div id="container-sequencer" className="container-sequencer">
+        <div id="sequencer" className="sequencer">
+          <div className="row" data-target-drum="crash">
             <img src="./在线架子鼓 _ Online Drum Kit _ Codrops_files/crash.png" alt="Crash" />
             {rhythm.map((item, index) => {
               return (
@@ -15,7 +15,7 @@ function Arranger(props) {
               )
             })}
           </div>
-          <div class="row" data-target-drum="hiHat">
+          <div className="row" data-target-drum="hiHat">
             {/* <img src="./在线架子鼓 _ Online Drum Kit _ Codrops_files/hi-hat.png" alt="Hi hat" /> */}
             {rhythm.map((item, index) => {
               return (
@@ -23,7 +23,7 @@ function Arranger(props) {
               )
             })}
           </div>
-          <div class="row" data-target-drum="snare">
+          <div className="row" data-target-drum="snare">
             {/* <img src="./在线架子鼓 _ Online Drum Kit _ Codrops_files/snare.png" alt="Snare" /> */}
             {rhythm.map((item, index) => {
               return (
@@ -31,7 +31,7 @@ function Arranger(props) {
               )
             })}
           </div>
-          <div class="row" data-target-drum="rightTom">
+          <div className="row" data-target-drum="rightTom">
             {/* <img src="./在线架子鼓 _ Online Drum Kit _ Codrops_files/right-tom.png" alt="Right tom" /> */}
             {rhythm.map((item, index) => {
               return (
@@ -39,7 +39,7 @@ function Arranger(props) {
               )
             })}
           </div>
-          <div class="row" data-target-drum="leftTom">
+          <div className="row" data-target-drum="leftTom">
             {/* <img src="./在线架子鼓 _ Online Drum Kit _ Codrops_files/left-tom.png"  alt="Left tom" /> */}
             {rhythm.map((item, index) => {
               return (
@@ -47,7 +47,7 @@ function Arranger(props) {
               )
             })}
           </div>
-          <div class="row" data-target-drum="floorTom">
+          <div className="row" data-target-drum="floorTom">
 
             {/* <img src="./在线架子鼓 _ Online Drum Kit _ Codrops_files/floor-tom.png" alt="Floor tom" /> */}
             {rhythm.map((item, index) => {
@@ -56,7 +56,7 @@ function Arranger(props) {
               )
             })}
           </div>
-          <div class="row" data-target-drum="kick">
+          <div className="row" data-target-drum="kick">
             {/* <img src="./在线架子鼓 _ Online Drum Kit _ Codrops_files/kick.png" alt="Kick" /> */}
             {rhythm.map((item, index) => {
               return (

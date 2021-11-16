@@ -365,7 +365,7 @@ function Drums(props) {
               transform="translate(-0.23)" fill="#333"></path>
           </g>
 
-          <g id="Tom-Righ" onClick={(e) => { clickDom(e?.target.parentNode) }}>
+          <g id="Tom-Right" onClick={(e) => { clickDom(e?.target.parentNode) }}>
 
             <path d="M555.76,146.74H742.49V302.2H555.76V146.74Z" transform="translate(-0.23)" fill="#0F52BA"
               stroke="#333" strokeLinecap="round" strokeLinejoin="round" strokeWidth="8"></path>
@@ -579,41 +579,41 @@ function Drums(props) {
 
 
         <g id="All-Keys" opacity="0.9">
-          <g id="Key-66" className="key-wrap">
+          <g id="Key-b" className="key-wrap">
             <path
               d="M554.5,779.86A10.17,10.17,0,0,1,544.36,790H454a10.17,10.17,0,0,1-10.14-10.14V689.45A10.17,10.17,0,0,1,454,679.32h90.41a10.17,10.17,0,0,1,10.14,10.14v90.41Z"
               transform="translate(-0.23)"></path> <text transform="translate(476.83 753.85)"
                 className="key-text">B</text>
           </g>
-          <g id="Key-74" className="key-wrap">
+          <g id="Key-j" className="key-wrap">
             <path
               d="M933,779.86A10.17,10.17,0,0,1,922.88,790H832.48a10.17,10.17,0,0,1-10.14-10.14V689.45a10.17,10.17,0,0,1,10.14-10.14h90.41A10.17,10.17,0,0,1,933,689.45v90.41Z"
               transform="translate(-0.23)"></path> <text transform="translate(860.77 753.85)"
                 className="key-text">J</text>
           </g>
-          <g id="Key-72" className="key-wrap">
+          <g id="Key-h" className="key-wrap">
             <path
               d="M799.52,779.86A10.17,10.17,0,0,1,789.39,790H699a10.17,10.17,0,0,1-10.14-10.14V689.45A10.17,10.17,0,0,1,699,679.32h90.41a10.17,10.17,0,0,1,10.14,10.14v90.41Z"
               transform="translate(-0.23)"></path> <text transform="translate(720.27 753.85)"
                 className="key-text">H</text>
           </g>
-          <g id="Key-71" className="key-wrap">
+          <g id="Key-g" className="key-wrap">
             <path
               d="M311.16,779.86A10.17,10.17,0,0,1,301,790H210.61a10.17,10.17,0,0,1-10.14-10.14V689.45a10.17,10.17,0,0,1,10.14-10.14H301a10.17,10.17,0,0,1,10.14,10.14v90.41Z"
               transform="translate(-0.23)"></path> <text transform="translate(231.99 753.72)"
                 className="key-text">G</text>
           </g>
-          <g id="Key-70" className="key-wrap">
+          <g id="Key-f" className="key-wrap">
             <path
               d="M177.66,779.86A10.17,10.17,0,0,1,167.52,790H77.12A10.17,10.17,0,0,1,67,779.86V689.45a10.17,10.17,0,0,1,10.14-10.14h90.41a10.17,10.17,0,0,1,10.14,10.14v90.41Z"
               transform="translate(-0.23)"></path> <text transform="translate(103.7 753.85)" className="key-text">F</text>
           </g>
-          <g id="Key-89" className="key-wrap">
+          <g id="Key-y" className="key-wrap">
             <path
               d="M702.36,100.55a10.17,10.17,0,0,1-10.14,10.14H601.81a10.17,10.17,0,0,1-10.14-10.14V10.14A10.17,10.17,0,0,1,601.81,0h90.41a10.17,10.17,0,0,1,10.14,10.14v90.41Z"
               transform="translate(-0.23)"></path> <text transform="translate(627.75 74.53)" className="key-text">Y</text>
           </g>
-          <g id="Key-84" className="key-wrap">
+          <g id="Key-t" className="key-wrap">
             <path
               d="M406.64,100.55a10.17,10.17,0,0,1-10.14,10.14H306.09A10.17,10.17,0,0,1,296,100.55V10.14A10.17,10.17,0,0,1,306.09,0H396.5a10.17,10.17,0,0,1,10.14,10.14v90.41Z"
               transform="translate(-0.23)"></path> <text transform="translate(332.68 74.53)" className="key-text">T</text>
