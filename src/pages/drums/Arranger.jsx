@@ -1,68 +1,79 @@
 import React from "react";
 import './Arranger.less'
 
+import TomRight from '@/static/images/drums/TomRight.jpg'
+import Crash from '@/static/images/drums/Crash.jpg'
+import FloorTom from "@/static/images/drums/FloorTom.jpg"
+import Kick from "@/static/images/drums/Kick.jpg"
+import HiHat from "@/static/images/drums/HiHat.jpg"
+import Snare from "@/static/images/drums/Snare.jpg"
+import TomLeft from "@/static/images/drums/TomLeft.jpg"
+
+
 function Arranger(props) {
-  const { rhythm } = props
+  const { beat, clickDom, setbeat, instrumentsType } = props
+  let rhythm = beat
+
+  const returnCheckbox = (str) => {
+    return (
+      rhythm.map((item, index) => {
+        const key = `${str}-${index}`
+        return (
+          <label className={`row-${index}`} key={key} id={key}><input type="checkbox" /><span></span></label>
+        )
+      })
+    )
+  }
+
   return (
     <div className="content">
       <div id="container-sequencer" className="container-sequencer">
-        <div id="sequencer" className="sequencer">
+        <div id="sequencer" className="sequencer" onClick={(e) => { // 阻止默认事件
+          if (e?.target.parentNode.tagName !== 'LABEL') return 0;
+          e.stopPropagation()
+          e.preventDefault();
+          const parentDom = e?.target.parentNode
+          parentDom.children[0].checked = !parentDom.children[0].checked
+
+          let str = ''
+          const idList = parentDom.id.split('-')
+          if (idList.length === 2) {
+            str = idList[0]
+          } else if (idList.length === 3) {
+            str = `${idList[0]}-${idList[1]}`
+          }
+          parentDom.children[0].checked && clickDom(str)
+
+          rhythm[parseInt(idList[idList.length - 1])][instrumentsType[str]] = + parentDom.children[0].checked
+          setbeat(rhythm)
+        }}>
           <div className="row" data-target-drum="crash">
-            <img src="./在线架子鼓 _ Online Drum Kit _ Codrops_files/crash.png" alt="Crash" />
-            {rhythm.map((item, index) => {
-              return (
-                <label className={`crash-${index}`}><input type="checkbox" /><span></span></label>
-              )
-            })}
+            <img src={Crash} alt="Crash" />
+            {returnCheckbox('Crash')}
           </div>
           <div className="row" data-target-drum="hiHat">
-            {/* <img src="./在线架子鼓 _ Online Drum Kit _ Codrops_files/hi-hat.png" alt="Hi hat" /> */}
-            {rhythm.map((item, index) => {
-              return (
-                <label className={`hiHat-${index}`}><input type="checkbox" /><span></span></label>
-              )
-            })}
+            <img src={HiHat} alt="Hihat" />
+            {returnCheckbox('Hi-Hat')}
           </div>
           <div className="row" data-target-drum="snare">
-            {/* <img src="./在线架子鼓 _ Online Drum Kit _ Codrops_files/snare.png" alt="Snare" /> */}
-            {rhythm.map((item, index) => {
-              return (
-                <label className={`snare-${index}`}><input type="checkbox" /><span></span></label>
-              )
-            })}
+            <img src={Snare} alt="Snare" />
+            {returnCheckbox('Snare')}
           </div>
           <div className="row" data-target-drum="rightTom">
-            {/* <img src="./在线架子鼓 _ Online Drum Kit _ Codrops_files/right-tom.png" alt="Right tom" /> */}
-            {rhythm.map((item, index) => {
-              return (
-                <label className={`rightTom-${index}`}><input type="checkbox" /><span></span></label>
-              )
-            })}
+            <img src={TomRight} alt="Righttom" />
+            {returnCheckbox('Tom-Right')}
           </div>
           <div className="row" data-target-drum="leftTom">
-            {/* <img src="./在线架子鼓 _ Online Drum Kit _ Codrops_files/left-tom.png"  alt="Left tom" /> */}
-            {rhythm.map((item, index) => {
-              return (
-                <label className={`leftTom-${index}`}><input type="checkbox" /><span></span></label>
-              )
-            })}
+            <img src={TomLeft} alt="Lefttom" />
+            {returnCheckbox('Tom-Left')}
           </div>
           <div className="row" data-target-drum="floorTom">
-
-            {/* <img src="./在线架子鼓 _ Online Drum Kit _ Codrops_files/floor-tom.png" alt="Floor tom" /> */}
-            {rhythm.map((item, index) => {
-              return (
-                <label className={`floorTom-${index}`}><input type="checkbox" /><span></span></label>
-              )
-            })}
+            <img src={FloorTom} alt="Floortom" />
+            {returnCheckbox('Floor-Tom')}
           </div>
           <div className="row" data-target-drum="kick">
-            {/* <img src="./在线架子鼓 _ Online Drum Kit _ Codrops_files/kick.png" alt="Kick" /> */}
-            {rhythm.map((item, index) => {
-              return (
-                <label className={`kick-${index}`}><input type="checkbox" /><span></span></label>
-              )
-            })}
+            <img src={Kick} alt="Kick" />
+            {returnCheckbox('Kick')}
           </div>
         </div>
       </div>
