@@ -8,7 +8,17 @@ import { audioControl, is, debounce, LS } from '@/util'
 import { mapKeyCodeToNote, mapNoteToDom } from './map.js'
 import { useNavigate } from 'react-router-dom'
 import './index.scss';
+import PubModal from '../../components/PubModal'
+import animateCSS from '../../util/animate'
 
+import { Button } from 'antd'
+import {
+  PlayCircleOutlined,
+  RetweetOutlined,
+  SwapOutlined,
+  CheckOutlined,
+  SwapLeftOutlined
+} from '@ant-design/icons';
 let audioRate = 1;
 const changeAudioRate = (value) => {
   audioRate = Math.floor(value / 60);
@@ -118,30 +128,12 @@ const crunkerMusic = async (remarkArr) => {
 
 }
 
-/**
- * 点击完成时的回调函数
- * @param {*} e
- * @param {*} remarkArr
- * @returns
- */
-const handleFinish = async (e, remarkArr) => {
-  const audioBuffer = await crunkerMusic(remarkArr);
-  if (is.Void(audioBuffer)) return;
-  const crunker = new Crunker();
-  const output = crunker.export(audioBuffer, 'audio/mp3')
-  const subTrack = LS.getItem('subTrack');
-  if (subTrack) {
-    LS.setItem('subTrack', { ...subTrack, 'piano2': output.url })
-  } else {
-    LS.setItem('subTrack', { 'piano1': output.url })
-  }
-}
 
-const debounceFinish = debounce(handleFinish, 1000)
 
 function Piano(props) {
   const [reset, setReset] = useState(false);
   const [boxNums, setBoxNums] = useState(8);
+  const [visible, setVisible] = useState(false);
   const navigate = useNavigate();
 
   const remarkArr = useMemo(() => {
@@ -159,22 +151,83 @@ function Piano(props) {
     addKeyDownListener(playNode);
   }, [])
 
+  /**
+ * 点击完成时的回调函数
+ * @param {*} e
+ * @param {*} remarkArr
+ * @returns
+ */
+  const handleFinish = async (e, remarkArr) => {
+    try {
+      const audioBuffer = await crunkerMusic(remarkArr);
+      if (is.Void(audioBuffer)) return;
+      const crunker = new Crunker();
+      const output = crunker.export(audioBuffer, 'audio/mp3')
+      setVisible(output.url)
+    } catch (e) {
+      console.error(e)
+      notification.error({
+        placement: 'topRight',
+        duration: 3,
+        message: '音频读取失败'
+      });
+    }
+    const subTrack = LS.getItem('subTrack');
+    if (subTrack) {
+      LS.setItem('subTrack', { ...subTrack, 'piano2': output.url })
+    } else {
+      LS.setItem('subTrack', { 'piano1': output.url })
+    }
+    console.log(LS)
+  }
+
+  const debounceFinish = debounce(handleFinish, 1000)
+
   return (
     <div className="background">
       <header>
         <div className="step-container">
           <div className="goback">
-            <button onClick={() => { navigate('/') }}>返回</button>
+            <Button
+              type='text' onClick={() => { navigate('/') }}><SwapLeftOutlined />返回</Button>
           </div>
           <div className="middle">
-            <span><button onClick={() => { setReset(!reset); }}>重置</button></span>
-            <span>
-              <button onClick={() => { setBoxNums(boxNums === 8 ? 12 : 8) }}>切换</button>
-            </span>
-            <span>
-              <button onClick={(e) => { playLoop(e, remarkArr) }}>播放</button>
-            </span>
-            <span>
+            <Button
+              className='btn-warning'
+              onClick={() => {
+                setReset(!reset);
+                animateCSS(`#drum-RetweetOutlined`, 'bounce', 'animate__faster',)
+              }}
+              style={{ left: '-50px', top: '0px', transform: 'translate(0,50%)' }}
+            >
+              <RetweetOutlined rotate={90} id='drum-RetweetOutlined' />重置
+            </Button>
+
+            <Button
+              onClick={() => {
+                animateCSS(`#drum-SwapOutlined`, 'bounce', 'animate__faster',)
+                animateCSS(`.boxes-window`, 'backOutRight', 'animate__faster').then(() => {
+                  setBoxNums(boxNums === 8 ? 12 : 8)
+                  animateCSS(`.boxes-window`, 'backInRight', 'animate__faster')
+                })
+              }}
+              style={{ left: '80px', top: '0px', transform: 'translate(0,50%)' }}
+            >
+              <SwapOutlined rotate={90} id='drum-SwapOutlined' />{(boxNums === 12) ? 'x12' : 'x8'}
+            </Button>
+
+            <Button
+              type='primary'
+              onClick={(e) => {
+                playLoop(e, remarkArr)
+                animateCSS(`#drum-PlayCircleOutlined`, 'bounce', 'animate__faster',)
+              }}
+              style={{ left: '-180px', top: '0px', transform: 'translate(0,50%)' }}
+            >
+              <PlayCircleOutlined id='drum-PlayCircleOutlined' />播放
+            </Button>
+
+            {/* <span>
               节奏：<InputNumber
                 style={{ width: 80 }}
                 max={220}
@@ -182,16 +235,19 @@ function Piano(props) {
                 defaultValue={120}
                 onChange={changeAudioRate}
               />
-            </span>
+            </span> */}
           </div>
           <div className="finish">
-            <button onClick={(e) => { debounceFinish(e, remarkArr) }}>完成</button>
+            <Button
+              type='text'
+              style={{ left: '0', top: '0', transform: 'translate(-130%,0%)' }}
+              onClick={(e) => { debounceFinish(e, remarkArr) }}>完成<CheckOutlined /></Button>
           </div>
         </div>
         <div className="boxes-window">
           <BoxesContainer boxNums={boxNums} remarkArr={remarkArr} playNode={playNode} />
         </div>
-      </header>
+      </header >
       <article className="footer">
         <div className="piano">
           {pianoKeys.map(key => {
@@ -223,7 +279,12 @@ function Piano(props) {
           })}
         </div>
       </article>
-    </div>)
+      <PubModal
+        key='piano'
+        visible={visible}
+        onCancel={() => setVisible(false)}
+      />
+    </div >)
 }
 
 export default memo(Piano);
