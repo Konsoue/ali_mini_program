@@ -47,6 +47,7 @@
   "dependencies": {
     "@babel/preset-react": "^7.16.0",
     "animate.css": "^4.1.1",
+    "antd": "^4.16.13",
     "core-js": "^3.19.1",
     "crunker": "^1.2.1",
     "react": "^17.0.2",

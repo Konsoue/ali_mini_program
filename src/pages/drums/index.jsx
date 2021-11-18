@@ -7,6 +7,7 @@ import { debounce, audioControl } from '../../util/index'
 import Crunker from 'crunker'
 import Enum from '../../util/Enum'
 import animateCSS from '../../util/animate'
+import { Button } from 'antd'
 
 import BigRackTom from '@/static/songs/BigRackTom.mp3'
 import Crash from '@/static/songs/Crash.mp3'
@@ -15,6 +16,14 @@ import Kick from "@/static/songs/Kick.mp3"
 import HiHatClosed from "@/static/songs/HiHatClosed.mp3"
 import Snare from "@/static/songs/Snare.mp3"
 import SmallRackTom from "@/static/songs/SmallRackTom.mp3"
+
+import {
+  PlayCircleOutlined,
+  RetweetOutlined,
+  SwapOutlined,
+  CheckOutlined,
+  SwapLeftOutlined
+} from '@ant-design/icons';
 
 const instrumentsType = new Enum({ 0: 'Crash', 1: 'Hi-Hat', 2: 'Snare', 3: 'Tom-Right', 4: 'Tom-Left', 5: 'Floor-Tom', 6: 'Kick' })
 const instrumentsKey = new Enum({ 'f': 'Crash', 'j': 'Hi-Hat', 'h': 'Snare', 'y': 'Tom-Right', 't': 'Tom-Left', 'g': 'Floor-Tom', 'b': 'Kick' })
@@ -109,9 +118,9 @@ function Drums() {
       for (let i in beat[num]) {
         if (beat[num][i]) {
           clickDom(instrumentsType[i])
-          animateCSS(`#${doms[i].id}`, 'tada', 'animate__faster',)
           animateCSS(`#${doms[i].id} span`, 'tada', 'animate__faster', 'linear-gradient(315deg, #0e4aa7, #1058c7)')
         }
+        animateCSS(`#${doms[i].id}`, 'tada', 'animate__faster',)
       }
       // 回调
       playRow(++num)
@@ -161,24 +170,52 @@ function Drums() {
 
   return (
     <div className='drum-box'>
-      <button style={{ position: 'absolute', left: '2%', top: '2%', width: '50px', transform: 'translate(-2%,-2%)', zIndex: '100' }} onClick={() => {
-        console.log(123)
-        navigate('home')
-      }}>返回</button>
+      <Button
+        type='text'
+        style={{
+          left: '2%',
+          top: '2%',
+          transform: 'translate(-2%,-2%)',
+          zIndex: '100',
+        }}
+        onClick={() => {
+          navigate('/')
+        }}>
+        <SwapLeftOutlined />返回
+      </Button>
       <Drum
         clickDom={clickDom}
       />
-      <button style={{ position: 'absolute', left: '50%', bottom: '20%', width: '50px', transform: 'translate(-50%,20%)' }} onClick={() => {
-        clearTimeout(param)
-        playRow(0)
-      }}>播放</button>
-      <button style={{ position: 'absolute', left: '50%', bottom: '15%', width: '50px', transform: 'translate(-50%,20%)' }} onClick={() => {
-        clearCheck()
-      }}>重置</button>
-      <button style={{ position: 'absolute', left: '50%', bottom: '10%', width: '50px', transform: 'translate(-50%,20%)' }} onClick={() => {
-        clearCheck()
-        setbeat(Array.from({ length: (beat.length === 12) ? 8 : 12 }, () => new Array(7).fill(0)))
-      }}>切换</button>
+      <Button
+        type='primary'
+        style={{ right: '30%', bottom: '5%', transform: 'translate(-50%,50%)' }}
+        onClick={() => {
+          clearTimeout(param)
+          playRow(0)
+          animateCSS(`#drum-PlayCircleOutlined`, 'bounce', 'animate__faster',)
+        }}>
+        <PlayCircleOutlined id='drum-PlayCircleOutlined' />播放
+      </Button>
+      <Button
+        className='btn-warning'
+        style={{ right: '20%', bottom: '5%', transform: 'translate(-50%,50%)' }}
+        onClick={() => {
+          clearTimeout(param)
+          clearCheck()
+          animateCSS(`#drum-RetweetOutlined`, 'bounce', 'animate__faster',)
+        }}>
+        <RetweetOutlined rotate={90} id='drum-RetweetOutlined' />重置
+      </Button>
+      <Button
+        style={{ right: '10%', bottom: '5%', transform: 'translate(-50%,50%)' }}
+        onClick={() => {
+          clearTimeout(param)
+          clearCheck()
+          setbeat(Array.from({ length: (beat.length === 12) ? 8 : 12 }, () => new Array(7).fill(0)))
+          animateCSS(`#drum-SwapOutlined`, 'bounce', 'animate__faster',)
+        }}>
+        <SwapOutlined rotate={90} id='drum-SwapOutlined' />{(beat.length === 12) ? 'x12' : 'x8'}
+      </Button>
       <Arranger
         beat={beat}
         clickDom={clickDom}
@@ -213,7 +250,13 @@ function Drums() {
         </audio>
       </div>
 
-      <button style={{ position: 'absolute', right: '2%', top: '2%', width: '50px', transform: 'translate(2%,-2%)' }} onClick={handleFinish}>完成</button>
+      <Button
+        type='text'
+        // className='btn-success'
+        style={{ right: '2%', top: '2%', transform: 'translate(2%,-2%)', color: '#344b3a' }}
+        onClick={handleFinish}>
+        完成<CheckOutlined />
+      </Button>
     </div>
   )
 }

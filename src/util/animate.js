@@ -1,5 +1,6 @@
 import 'animate.css';
-
+// https://animate.style/
+// css动画库
 const animateCSS = (element, animation, speed, backgroundcolor, prefix = 'animate__',) => new Promise((resolve, reject) => {
   const animationName = `${prefix}${animation}`;
 
