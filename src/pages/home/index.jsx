@@ -1,12 +1,17 @@
-import React from "react";
-import Switch from  '@/components/Switch'
+import React, { useState } from "react";
+import Switch from '@/components/Switch'
+import ViceMusic from '../../components/ViceMusic'
 
 import A48 from '@/static/songs/a48.mp3'
 
 function Home() {
+
   return (
     <div>
-      <Switch src={ A48 } id={123}/>
+      <ViceMusic />
+
+      <Switch src={A48} id={123} />
+
     </div>
   )
 }
