@@ -1,0 +1,110 @@
+.vice-music-container {
+  width: 300px;
+  height: 550px;
+  background-color: white;
+  margin: 20px;
+  display: flex;
+  flex-direction: column;
+  color: #2d4e76;
+  .vice-music-header {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    height: 50px;
+    background-color: #bbabd0;
+    justify-content: start;
+    padding-left: 10px;
+    padding-right: 10px;
+    .vice-music-title {
+      flex: 3;
+      font-size: 22px;
+    }
+    .make-btn {
+      flex: 1;
+      display: flex;
+      width: 50px;
+      height: 30px;
+      border: 1px solid #2d4e76;
+      border-radius: 3px;
+      font-size: 14px;
+      line-height: 30px;
+      &:hover {
+        background-color: #dbceec;
+        cursor: pointer;
+      }
+      .make-icon,
+      span {
+        padding-left: 3px;
+      }
+    }
+  }
+  .vice-music-panel {
+    flex: 7;
+    padding: 5px;
+    .vice-music-item {
+      border: 1px solid #5179a8;
+      border-radius: 5px;
+      margin-bottom: 5px;
+      padding: 5px;
+      position: relative;
+      .vice-music-checkbox {
+        position: absolute;
+        right: 10px
+      }
+      .vice-music-item-title {
+        font-size: 18px;
+        margin-bottom: 12px;
+      }
+      .vice-music-item-progress {
+        display: flex;
+        align-items: center;
+        margin-bottom: 8px;
+        .vice-music-item-bar {
+          flex: 9;
+
+        }
+        .vice-music-item-btn {
+          flex:1;
+          position: relative;
+          .pause-btn,
+          .play-btn {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+          }
+          .pause-btn {
+            display: none;
+          }
+        }
+      }
+    }
+
+
+  }
+  .vice-music-footer {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    height: 50px;
+    width: 300px;
+    background-color: #bbabd0;
+    .delete-btn,
+    .merge-btn {
+      display: flex;
+      width: 40px;
+      height: 30px;
+      border: 1px solid #2d4e76;
+      border-radius: 3px;
+      font-size: 14px;
+      line-height: 30px;
+      margin-right: 10px;
+      padding-left: 10px;
+      &:hover {
+        background-color: #dbceec;
+        cursor: pointer;
+      }
+    }
+  }
+}
