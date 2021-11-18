@@ -14,6 +14,7 @@ function Arranger(props) {
   const { beat, clickDom, setbeat, instrumentsType } = props
   let rhythm = beat
 
+  // 根据beat渲染dom
   const returnCheckbox = (str) => {
     return (
       rhythm.map((item, index) => {

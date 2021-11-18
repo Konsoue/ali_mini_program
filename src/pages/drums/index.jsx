@@ -3,7 +3,11 @@ import { useNavigate } from 'react-router-dom';
 import Drum from './drum'
 import Arranger from './Arranger'
 import './index.less'
+import { debounce, audioControl } from '../../util/index'
+import Crunker from 'crunker'
+import Enum from '../../util/Enum'
 import animateCSS from '../../util/animate'
+
 import BigRackTom from '@/static/songs/BigRackTom.mp3'
 import Crash from '@/static/songs/Crash.mp3'
 import FloorTom from "@/static/songs/FloorTom.mp3"
@@ -11,47 +15,66 @@ import Kick from "@/static/songs/Kick.mp3"
 import HiHatClosed from "@/static/songs/HiHatClosed.mp3"
 import Snare from "@/static/songs/Snare.mp3"
 import SmallRackTom from "@/static/songs/SmallRackTom.mp3"
-import Enum from '../../util/Enum'
-import { debounce } from '../../util/index'
+
 const instrumentsType = new Enum({ 0: 'Crash', 1: 'Hi-Hat', 2: 'Snare', 3: 'Tom-Right', 4: 'Tom-Left', 5: 'Floor-Tom', 6: 'Kick' })
 const instrumentsKey = new Enum({ 'f': 'Crash', 'j': 'Hi-Hat', 'h': 'Snare', 'y': 'Tom-Right', 't': 'Tom-Left', 'g': 'Floor-Tom', 'b': 'Kick' })
-function Drums() {
+const TomMp3 = new Enum({ 'Crash': Crash, 'Hi-Hat': HiHatClosed, 'Snare': Snare, 'Tom-Right': SmallRackTom, 'Tom-Left': BigRackTom, 'Floor-Tom': FloorTom, 'Kick': Kick })
 
+function Drums() {
+  // 设置曲谱beat，用作记录旋律
   const [beat, setbeat] = useState(Array.from({ length: 12 }, () => new Array(7).fill(0)))
-  const navigate = useNavigate(); // 跳转到别的页面 navigate('xxxpath')
+  // 跳转到别的页面 navigate('xxxpath')
+  const navigate = useNavigate();
+  // 防抖暂存区arr，多次点击
   let arr = new Array(7).fill(0)
+  // param设置定时器的key，用于暂停定时器
   let param;
+
   // 设置按键
   document.onkeydown = function (e) {
     const thisKeyID = 'Key-' + e.key;
+    // 根据instrumentsKey来返回key对应的乐器id
     if (instrumentsKey[e.key]) {
       clickDom(instrumentsKey[e.key])
+      // css动画
       animateCSS(`#${thisKeyID}`, 'shakeY', 'animate__faster')
+      // 设置暂存区
       arr[instrumentsType[instrumentsKey[e.key]]] = 1
-      _addCheck()
+      // 刷新函数防抖
+      _refreshCheck()
     }
   };
 
+  // 点击架子鼓事件
   const clickDom = (domId) => {
+    // 清除定时器
     clearTimeout(param)
+    // 误点return0
     if (domId === 'Drums') { return 0 }
+    // 获取音频
     const audio = document.querySelector(`#${domId}-Audio`)
+    // 音频重新播放
     audio.currentTime = 0
     audio.play()
+    // 设置css动画
     animateCSS(`#${domId}`, 'headShake', 'animate__faster')
   }
 
-  const addCheck = () => {
-    beat.pop()
-    beat.unshift(arr)
+  // 刷新函数
+  const refreshCheck = () => {
+    // 更新beat数组
+    beat.shift()
+    beat.push(arr)
     setbeat(beat)
+    // 重置暂存arr
     arr = new Array(7).fill(0)
 
+    // 获取曲谱区dom
     const dom = document.querySelector('#sequencer')
-
     const rowLength = dom.children.length;
     const labelLength = dom.children[0].children.length;
 
+    // 遍历添加
     for (let i = 0; i < rowLength; i++) {
       for (let j = 1; j < labelLength; j++) {
         dom.children[i].children[j].children[0].checked = beat[j - 1][i]
@@ -59,6 +82,7 @@ function Drums() {
     }
   }
 
+  // 重置函数
   const clearCheck = () => {
     const dom = document.querySelector('#sequencer')
     const rowLength = dom.children.length;
@@ -70,21 +94,69 @@ function Drums() {
     }
   }
 
-  const _addCheck = debounce(addCheck, 100)
+  // 防抖函数
+  const _refreshCheck = debounce(refreshCheck, 100)
 
+  // 播放事件
   const playRow = (num) => {
+    // 设置定时器param
     param = setTimeout(() => {
+      // 如果到最后则结束
       if (num === beat.length) return 0;
+      // 获取所在行元素
       const doms = document.querySelectorAll(`.row-${num}`)
-      for (let i = 0; i < beat[num].length; i++) {
+      // 遍历判断并播放事件添加动画
+      for (let i in beat[num]) {
         if (beat[num][i]) {
           clickDom(instrumentsType[i])
           animateCSS(`#${doms[i].id}`, 'tada', 'animate__faster',)
           animateCSS(`#${doms[i].id} span`, 'tada', 'animate__faster', 'linear-gradient(315deg, #0e4aa7, #1058c7)')
         }
       }
+      // 回调
       playRow(++num)
     }, 500)
+  }
+
+  //  合成副音轨
+  const crunkerMusic = async () => {
+    const crunker = new Crunker();
+    let mergeBuffer = null;
+    // 遍历beat
+    for (let i in beat) {
+      const sameLevel = [];
+      for (let j in beat[i]) {
+        // 有记录则放至sameLevel
+        if (beat[i][j]) {
+          sameLevel.push(TomMp3[instrumentsType[j]]);
+        }
+      }
+      if (sameLevel.length) {
+        let buffers = await crunker.fetchAudio(...sameLevel)
+        buffers = buffers.map(buffer => audioControl.cutAudioBuffer(buffer, 1));
+        const buffer = crunker.mergeAudio(buffers);
+        if (mergeBuffer) {
+          mergeBuffer = crunker.concatAudio([mergeBuffer, buffer])
+        } else {
+          mergeBuffer = buffer;
+        }
+      }
+    }
+    return mergeBuffer;
+  }
+
+  // 完成事件
+  const handleFinish = async () => {
+    // 转mp3
+    let crunker = new Crunker();
+    const musicBuffer = await crunkerMusic();
+    const mp3 = crunker.export(musicBuffer, "audio/mp3")
+    // 播放
+    document.querySelector('#Tom-all source').src = mp3.url;
+    document.querySelector('#Tom-all').load()
+    document.querySelector('#Tom-all').play()
+    // 下载
+    crunker.download(mp3.blob)
   }
 
   return (
@@ -136,12 +208,12 @@ function Drums() {
         <audio id="Snare-Audio" preload="auto">
           <source src={Snare} type="audio/mp3" />
         </audio>
+        <audio id="Tom-all" preload="auto">
+          <source src={null} type="audio/mp3" />
+        </audio>
       </div>
 
-      <button style={{ position: 'absolute', right: '2%', top: '2%', width: '50px', transform: 'translate(2%,-2%)' }} onClick={() => {
-        console.log(123)
-
-      }}>完成</button>
+      <button style={{ position: 'absolute', right: '2%', top: '2%', width: '50px', transform: 'translate(2%,-2%)' }} onClick={handleFinish}>完成</button>
     </div>
   )
 }
