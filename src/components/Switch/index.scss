@@ -1,0 +1,26 @@
+* {
+    margin: 0;
+}
+
+circle {
+    stroke-width: 8px;
+    transform-origin: center;
+
+    &.progress-background {
+        transform: scale(0.9);
+        stroke: rgba(255, 205, 49, 0.5);
+    }
+
+    &.progress-bar {
+        /* 旋转90度的目的是为了调整起始点 */
+        transform: scale(0.9) rotate(-90deg);
+        stroke: #ffcd32;
+        stroke-dasharray: 10 5;
+    }
+}
+
+.title {
+    position: absolute;
+    top: 40px;
+    left: 35px;
+}
