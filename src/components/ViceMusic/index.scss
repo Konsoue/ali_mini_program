@@ -6,6 +6,7 @@
   display: flex;
   flex-direction: column;
   color: #2d4e76;
+
   .vice-music-header {
     flex: 1;
     display: flex;
@@ -15,10 +16,12 @@
     justify-content: start;
     padding-left: 10px;
     padding-right: 10px;
+
     .vice-music-title {
       flex: 3;
       font-size: 22px;
     }
+
     .make-btn {
       flex: 1;
       display: flex;
@@ -28,44 +31,56 @@
       border-radius: 3px;
       font-size: 14px;
       line-height: 30px;
+
       &:hover {
         background-color: #dbceec;
         cursor: pointer;
       }
+
       .make-icon,
       span {
         padding-left: 3px;
       }
     }
   }
+
   .vice-music-panel {
     flex: 7;
     padding: 5px;
+    overflow: auto;
+    height: 60vh;
+
     .vice-music-item {
       border: 1px solid #5179a8;
       border-radius: 5px;
       margin-bottom: 5px;
       padding: 5px;
-      position: relative;
+      position: absolute;
+
       .vice-music-checkbox {
         position: absolute;
         right: 10px
       }
+
       .vice-music-item-title {
         font-size: 18px;
         margin-bottom: 12px;
       }
+
       .vice-music-item-progress {
         display: flex;
         align-items: center;
         margin-bottom: 8px;
+
         .vice-music-item-bar {
           flex: 9;
 
         }
+
         .vice-music-item-btn {
-          flex:1;
+          flex: 1;
           position: relative;
+
           .pause-btn,
           .play-btn {
             position: absolute;
@@ -73,6 +88,7 @@
             left: 50%;
             transform: translate(-50%, -50%);
           }
+
           .pause-btn {
             display: none;
           }
@@ -82,6 +98,7 @@
 
 
   }
+
   .vice-music-footer {
     flex: 1;
     display: flex;
@@ -90,6 +107,7 @@
     height: 50px;
     width: 300px;
     background-color: #bbabd0;
+
     .delete-btn,
     .merge-btn {
       display: flex;
@@ -101,10 +119,68 @@
       line-height: 30px;
       margin-right: 10px;
       padding-left: 10px;
+
       &:hover {
         background-color: #dbceec;
         cursor: pointer;
       }
     }
+  }
+}
+
+
+.vice-title-container {
+  position: relative;
+}
+
+.vice-make {
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
+.ant-checkbox-group {
+  width: 100%;
+}
+
+.vice-music-panel::-webkit-scrollbar {
+  width: 10px;
+  height: 50px;
+}
+
+.vice-music-panel::-webkit-scrollbar-track {
+  background-color: rgba(0, 0, 0, 0);
+}
+
+.vice-music-panel::-webkit-scrollbar-thumb {
+  border-radius: 18px;
+  background-color: rgba(0, 0, 0, .12);
+}
+
+.vice-music-panel::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(0, 0, 0, .25);
+}
+
+.page-content {
+  text-align: center;
+}
+
+.page-check {
+  position: relative;
+  display: inline-block;
+  border: 2px solid #eee;
+  height: 154px;
+  width: 154px;
+  text-align: center;
+  border-radius: 3px;
+  cursor: pointer;
+
+  &.active {
+    border: 2px solid aqua;
+  }
+
+  img {
+    width: 100%;
+    height: 100%;
   }
 }

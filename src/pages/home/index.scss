@@ -1,0 +1,20 @@
+.ant-layout {
+  background: transparent;
+}
+
+.ant-layout-sider {
+  position: fixed;
+  left: 0;
+  width: 350px !important;
+  max-width: 350px !important;
+  min-width: 350px !important;
+  overflow: auto;
+  height: 100vh;
+  background: transparent;
+}
+
+.site-layout {
+  height: 100vh;
+  margin-left: 350px;
+  background: transparent;
+}
