@@ -22,7 +22,7 @@ function Drums(props) {
             transform="translate(-0.23)" fill="#eefaf9" stroke="#333" strokeLinecap="round"
             strokeLinejoin="round" strokeWidth="6"></path>
 
-          <g id="Snare" onClick={(e) => { clickDom(e?.target.parentNode) }}>
+          <g id="Snare" onClick={(e) => { clickDom(e?.target.parentNode.id) }}>
 
             <path d="M655.47,320.79H843.88v92.94H655.47V320.79Z" transform="translate(-0.23)" fill="#0F52BA"
               stroke="#333" strokeLinecap="round" strokeLinejoin="round" strokeWidth="8"></path>
@@ -138,7 +138,7 @@ function Drums(props) {
 
           </g>
 
-          <g id="Floor-Tom" onClick={(e) => { clickDom(e?.target.parentNode) }}>
+          <g id="Floor-Tom" onClick={(e) => { clickDom(e?.target.parentNode.id) }}>
 
             <path d="M160.34,314.87H402.83V585.25H160.34V314.87Z" transform="translate(-0.23)" fill="#0F52BA"
               stroke="#333" strokeLinecap="round" strokeLinejoin="round" strokeWidth="8"></path>
@@ -223,7 +223,7 @@ function Drums(props) {
 
           </g>
 
-          <g id="Hi-Hat" onClick={(e) => { clickDom(e?.target.parentNode) }}>
+          <g id="Hi-Hat" onClick={(e) => { clickDom(e?.target.parentNode.id) }}>
 
             <path d="M887.82,290.37V190.84a4.73,4.73,0,0,0-4.65-4.82,4.67,4.67,0,0,0-4.65,4.82v99.53h9.29Z"
               transform="translate(-0.23)" fill="#eefaf9" stroke="#333" strokeLinecap="round"
@@ -297,7 +297,7 @@ function Drums(props) {
               strokeLinejoin="round" strokeWidth="6"></path>
           </g>
 
-          <g id="Tom-Left" onClick={(e) => { clickDom(e?.target.parentNode) }}>
+          <g id="Tom-Left" onClick={(e) => { clickDom(e?.target.parentNode.id) }}>
 
             <path d="M259.2,146.74H445.93V302.2H259.2V146.74Z" transform="translate(-0.23)" fill="#0F52BA"
               stroke="#333" strokeLinecap="round" strokeLinejoin="round" strokeWidth="8"></path>
@@ -365,7 +365,7 @@ function Drums(props) {
               transform="translate(-0.23)" fill="#333"></path>
           </g>
 
-          <g id="Tom-Right" onClick={(e) => { clickDom(e?.target.parentNode) }}>
+          <g id="Tom-Right" onClick={(e) => { clickDom(e?.target.parentNode.id) }}>
 
             <path d="M555.76,146.74H742.49V302.2H555.76V146.74Z" transform="translate(-0.23)" fill="#0F52BA"
               stroke="#333" strokeLinecap="round" strokeLinejoin="round" strokeWidth="8"></path>
@@ -432,7 +432,7 @@ function Drums(props) {
               transform="translate(-0.23)" fill="#333"></path>
           </g>
 
-          <g id="Kick" onClick={(e) => { clickDom(e?.target.parentNode) }}>
+          <g id="Kick" onClick={(e) => { clickDom(e?.target.parentNode.id) }}>
             <path
               d="M314.29,460.45a8.89,8.89,0,0,1,17.74.84l-2.28,49L312,509.46Zm11.24,49.68L319,651.58a4.68,4.68,0,0,1-4.9,4.56,4.61,4.61,0,0,1-4.39-5l6.51-141.44Z"
               transform="translate(-0.23)" fill="#eefaf9" stroke="#333" strokeLinecap="round"
@@ -510,7 +510,7 @@ function Drums(props) {
               strokeMiterlimit="10" strokeWidth="4"></path>
           </g>
 
-          <g id="Crash" onClick={(e) => { clickDom(e?.target.parentNode) }}>
+          <g id="Crash" onClick={(e) => { clickDom(e?.target.parentNode.id) }}>
 
             <path d="M173.78,121.64l17.15-47.15a4.64,4.64,0,1,0-8.7-3.21l-17.15,47.15Z" transform="translate(-0.23)"
               fill="#eefaf9" stroke="#333" strokeLinecap="round" strokeLinejoin="round" strokeWidth="6"></path>
