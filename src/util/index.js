@@ -158,3 +158,29 @@ export const audioControl = {
   }
 
 }
+
+// 防抖
+export const debounce = (fn, wait = 200, immediate = false) => {
+  let timer = null
+
+  // 此处一定要用 function，否则 this 的指向会错误
+  return function (...args) {
+    if (timer != null) {
+      clearTimeout(timer)
+    }
+
+    if (immediate && timer == null) {
+      fn.apply(this, args)
+      timer = setTimeout(() => {
+        timer = null
+      }, wait)
+
+      return
+    }
+
+    timer = setTimeout(() => {
+      fn.apply(this, args)
+      timer = null
+    }, wait)
+  }
+}

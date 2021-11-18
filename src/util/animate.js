@@ -1,16 +1,18 @@
 import 'animate.css';
 
-const animateCSS = (element, animation, speed, prefix = 'animate__',) => new Promise((resolve, reject) => {
+const animateCSS = (element, animation, speed, backgroundcolor, prefix = 'animate__',) => new Promise((resolve, reject) => {
   const animationName = `${prefix}${animation}`;
 
   const node = document.querySelector(element);
-
-  node.classList.add(`${prefix}animated`, animationName,speed);
+  const color = node.style.backgroundColor
+  node.style.background = backgroundcolor
+  node.classList.add(`${prefix}animated`, animationName, speed);
   // speed && node.classList.add(`${prefix}animated`, speed);
   // When the animation ends, we clean the classes and resolve the Promise
   function handleAnimationEnd(event) {
     event.stopPropagation();
-    node.classList.remove(`${prefix}animated`, animationName,speed);
+    node.classList.remove(`${prefix}animated`, animationName, speed);
+    node.style.background = color
     // speed && node.classList.add(`${prefix}animated`, speed);
     resolve('Animation ended');
   }
