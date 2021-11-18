@@ -37,8 +37,11 @@ class Storage {
     return true;
   }
   getItem(key) {
+    const item = this.storage.getItem(key);
+    if (is.Void(item)) return false;
     const data = JSON.parse(this.storage.getItem(key));
-    if (!is.Undefined(data.expire) && data.expire > new Date() * 1) return data.val;
+    if (is.Undefined(data.expire)) return data.val;
+    else if (!is.Undefined(data.expire) && data.expire > new Date() * 1) return data.val;
     this.removeItem(key);
     return false;
   }
@@ -162,14 +165,14 @@ export const audioControl = {
 // 防抖
 export const debounce = (fn, wait = 200, immediate = false) => {
   let timer = null
-
   // 此处一定要用 function，否则 this 的指向会错误
   return function (...args) {
-    if (timer != null) {
-      clearTimeout(timer)
+    if (!is.Void(timer)) {
+      clearTimeout(timer);
+      return;
     }
 
-    if (immediate && timer == null) {
+    if (immediate && is.Void(timer)) {
       fn.apply(this, args)
       timer = setTimeout(() => {
         timer = null
@@ -177,7 +180,6 @@ export const debounce = (fn, wait = 200, immediate = false) => {
 
       return
     }
-
     timer = setTimeout(() => {
       fn.apply(this, args)
       timer = null

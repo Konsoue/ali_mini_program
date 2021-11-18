@@ -1,35 +1,12 @@
-import React, { memo, useEffect, useState, Fragment } from 'react';
+import React, { memo, useEffect, useState, useMemo } from 'react';
 import notes from "./notes.js";
 import pianoKeys from "./pianoKeys.js";
-import BoxContainer from './BoxContainer.jsx';
+import BoxesContainer from './BoxesContainer.jsx';
 import Crunker from 'crunker'
-import { audioControl, is } from '@/util'
+import { audioControl, is, debounce, LS } from '@/util'
+import { mapKeyCodeToNote, mapNoteToDom } from './map.js'
+import { useNavigate } from 'react-router-dom'
 import './index.scss';
-
-
-// 作为 box 遍历的数组
-const boxArr = [7, 6, 5, 4, 3, 2, 1, 0]; // 默认值：八行
-
-// 用于标记 box 的激活状态，用于播放合成的效果
-const remarkArr = new Array(8).fill().map(() => new Array(60).fill());
-
-const mapKeyCodeToNote = new Map([
-  [49, 'C'],
-  [50, 'D'],
-  [51, 'E'],
-  [52, 'F'],
-  [53, 'G'],
-  [54, 'A'],
-  [55, 'B'],
-  [81, "C#"],
-  [87, "D#"],
-  [69, "F#"],
-  [82, "G#"],
-  [84, "A#"],
-])
-
-// noteName 与 dom 之间的映射
-const mapNoteToDom = new Map();
 
 /**
  * 添加全屏键盘事件监听
@@ -74,20 +51,20 @@ const playNode = (nodeName) => {
 function handleAudioPlay(event) {
   const e = event || window.event || arguments.callee.caller.arguments[0];
   const parentNode = e.target.parentNode;
-  if (!parentNode.classList.contains('active')) {
-    parentNode.classList.add('active');
-  }
-  const timer = setTimeout(() => {
-    e.target.parentNode.classList.remove('active');
-    clearTimeout(timer);
-  }, 1000)
+  parentNode.classList.remove('active');
+  parentNode.classList.add('active');
+}
+
+function handleAudioEnd(event) {
+  const e = event || window.event || arguments.callee.caller.arguments[0];
+  e.target.parentNode.classList.remove('active')
 }
 
 /**
  * 预听合成的音频
  * @param {*} event
  */
-const playLoop = (event) => {
+const playLoop = (event, remarkArr) => {
   for (let i in remarkArr) {
     const sameLevel = [];
     for (let j in remarkArr[i]) {
@@ -106,7 +83,7 @@ const playLoop = (event) => {
 /**
  * 合成副音轨
  */
-const crunkerMusic = async () => {
+const crunkerMusic = async (remarkArr) => {
   const crunker = new Crunker();
   let mergeBuffer = null;
   for (let i in remarkArr) {
@@ -122,7 +99,7 @@ const crunkerMusic = async () => {
       buffers = buffers.map(buffer => audioControl.cutAudioBuffer(buffer, 1));
       const buffer = crunker.mergeAudio(buffers);
       if (mergeBuffer) {
-        mergeBuffer = crunker.concatAudio([buffer])
+        mergeBuffer = crunker.concatAudio([mergeBuffer, buffer])
       } else {
         mergeBuffer = buffer;
       }
@@ -132,19 +109,42 @@ const crunkerMusic = async () => {
 
 }
 
-
-const handleFinish = async () => {
-  const one = await crunkerMusic();
+/**
+ * 点击完成时的回调函数
+ * @param {*} e
+ * @param {*} remarkArr
+ * @returns
+ */
+const handleFinish = async (e, remarkArr) => {
+  const audioBuffer = await crunkerMusic(remarkArr);
+  if (is.Void(audioBuffer)) return;
+  const crunker = new Crunker();
+  const output = crunker.export(audioBuffer, 'audio/mp3')
+  const subTrack = LS.getItem('subTrack');
+  if (subTrack) {
+    LS.setItem('subTrack', { ...subTrack, 'piano2': output.url })
+  } else {
+    LS.setItem('subTrack', { 'piano1': output.url })
+  }
 }
+
+const debounceFinish = debounce(handleFinish, 1000)
 
 function Piano(props) {
 
-  const [boxNums, setBoxNums] = useState(boxArr);
+  const [boxNums, setBoxNums] = useState(8);
+  const navigate = useNavigate();
+
+  const remarkArr = useMemo(() => {
+    // 用于标记 box 的激活状态，用于播放合成的效果
+    return new Array(boxNums + 1).fill().map(() => new Array(60).fill());
+  }, [boxNums])
 
   useEffect(() => {
     const audios = document.querySelectorAll('.audioEle');
     audios.forEach(audio => {
-      audio.addEventListener('play', handleAudioPlay)
+      audio.addEventListener('play', debounce(handleAudioPlay, 200, true))
+      audio.addEventListener('ended', handleAudioEnd)
       mapNoteToDom.set(audio.dataset.note, audio);
     })
     addKeyDownListener(playNode);
@@ -154,20 +154,19 @@ function Piano(props) {
     <div className="background">
       <header>
         <div className="step-container">
-          <div className="goback"></div>
-          <div className="playSong">
-            <button onClick={playLoop}>播放</button>
+          <div className="goback">
+            <button onClick={() => { navigate('/') }}>返回</button>
+          </div>
+          <div className="middle">
+            <button onClick={() => { setBoxNums(boxNums === 8 ? 12 : 8) }}>切换</button>
+            <button onClick={(e) => { playLoop(e, remarkArr) }}>播放</button>
           </div>
           <div className="finish">
-            <button onClick={handleFinish}>完成</button>
+            <button onClick={(e) => { debounceFinish(e, remarkArr) }}>完成</button>
           </div>
         </div>
         <div className="boxes-window">
-          {boxNums.map(n => (
-            <div className="boxes-container" key={n} >
-              <BoxContainer remarkArr={remarkArr} timeLine={n} playNode={playNode} />
-            </div>
-          ))}
+          <BoxesContainer boxNums={boxNums} remarkArr={remarkArr} playNode={playNode} />
         </div>
       </header>
       <article className="footer">

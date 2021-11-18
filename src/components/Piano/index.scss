@@ -1,9 +1,9 @@
 $container-border-color: #89B5AF;
-$white-box-color: #FF865E;
-$black-box-color: #FEE440;
+$white-box-color: #89939B;
+$black-box-color: #6e767c;
 $white-box-border: 2px solid $white-box-color;
 $black-box-border: 2px solid $black-box-color;
-$ground-color: #A2D2FF;
+$ground-color: #c2ccd4;
 $box-color: #FEF9EF;
 
 .background {
@@ -63,7 +63,7 @@ $box-color: #FEF9EF;
 }
 
 .boxes-container {
-  margin: 5px 0;
+  position: relative;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -72,6 +72,7 @@ $box-color: #FEF9EF;
   -ms-flex-pack: center;
   justify-content: center;
   overflow: hidden;
+  margin: 0px 0 20px;
   padding: 0 2.5%;
 }
 
@@ -135,7 +136,20 @@ $box-color: #FEF9EF;
   font-size: 6px;
   text-align: center;
   height: 20px;
+  user-select: none;
   cursor: default;
+}
+
+.piano-note::selection {
+  background: transparent;
+}
+
+.piano-note::-webkit-selection {
+  background: transparent;
+}
+
+.piano-note::-moz-selection {
+  background: transparent;
 }
 
 .piano-key__black .piano-note {
@@ -199,6 +213,39 @@ $box-color: #FEF9EF;
   background: $black-box-color;
 }
 
+.box-order {
+  position: absolute;
+  width: 20px;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+}
+
 .step-container {
+  position: relative;
   height: 10vh;
+}
+
+.goback,
+.finish,
+.middle {
+  position: absolute;
+  top: 2%;
+  transform: translateY(50%);
+  button {
+    width: 50px;
+  }
+}
+
+.goback {
+  left: 2%;
+}
+
+.finish {
+  right: 2%;
+}
+
+.middle {
+  left: 50%;
+  transform: translateX(-50%) translateY(50%);
 }
