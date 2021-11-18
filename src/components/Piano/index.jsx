@@ -46,7 +46,6 @@ const addKeyDownListener = (callback) => {
 const playNode = (nodeName) => {
   const dom = mapNoteToDom.get(nodeName);
   dom.currentTime = 0;
-  console.log(audioRate);
   dom.playbackRate = audioRate;
   dom.play();
 }
