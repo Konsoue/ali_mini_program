@@ -24,3 +24,41 @@ circle {
     top: 40px;
     left: 35px;
 }
+.box-check {
+    &.active {
+        .selectClick{
+            position: relative;
+            border: 2px solid red;
+        }
+        .check{
+            visibility: visible;
+            position: absolute;
+            top:0px;
+            left:85px;
+        }
+        .delete{
+            visibility: visible;
+            position: absolute;
+            top:0px;
+            left:150px;
+            border: 1px solid pink;
+        }
+    }
+}
+.deleteAll {
+    visibility: hidden;
+    .box-check.active{
+        .check {
+            visibility: hidden;
+        }
+        .delete {
+            visibility: hidden;
+        }
+    } 
+}
+.check {
+    visibility: hidden;
+}
+.delete {
+    visibility: hidden;
+}
