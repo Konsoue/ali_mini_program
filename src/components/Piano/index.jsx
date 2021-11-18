@@ -1,5 +1,6 @@
 import React, { memo, useEffect, useState, useMemo } from 'react';
 import notes from "./notes.js";
+import { InputNumber } from 'antd';
 import pianoKeys from "./pianoKeys.js";
 import BoxesContainer from './BoxesContainer.jsx';
 import Crunker from 'crunker'
@@ -7,6 +8,11 @@ import { audioControl, is, debounce, LS } from '@/util'
 import { mapKeyCodeToNote, mapNoteToDom } from './map.js'
 import { useNavigate } from 'react-router-dom'
 import './index.scss';
+
+let audioRate = 1;
+const changeAudioRate = (value) => {
+  audioRate = Math.floor(value / 60);
+}
 
 /**
  * 添加全屏键盘事件监听
@@ -40,6 +46,8 @@ const addKeyDownListener = (callback) => {
 const playNode = (nodeName) => {
   const dom = mapNoteToDom.get(nodeName);
   dom.currentTime = 0;
+  console.log(audioRate);
+  dom.playbackRate = audioRate;
   dom.play();
 }
 
@@ -73,10 +81,12 @@ const playLoop = (event, remarkArr) => {
         play && sameLevel.push(noteName);
       }
     }
-    const timer = setTimeout(() => {
-      sameLevel.forEach(note => playNode(note));
-      clearTimeout(timer);
-    }, i * 500)
+    if (sameLevel.length) {
+      const timer = setTimeout(() => {
+        sameLevel.forEach(note => playNode(note));
+        clearTimeout(timer);
+      }, i * 500)
+    }
   }
 }
 
@@ -131,14 +141,14 @@ const handleFinish = async (e, remarkArr) => {
 const debounceFinish = debounce(handleFinish, 1000)
 
 function Piano(props) {
-
+  const [reset, setReset] = useState(false);
   const [boxNums, setBoxNums] = useState(8);
   const navigate = useNavigate();
 
   const remarkArr = useMemo(() => {
     // 用于标记 box 的激活状态，用于播放合成的效果
     return new Array(boxNums + 1).fill().map(() => new Array(60).fill());
-  }, [boxNums])
+  }, [boxNums, reset])
 
   useEffect(() => {
     const audios = document.querySelectorAll('.audioEle');
@@ -158,8 +168,22 @@ function Piano(props) {
             <button onClick={() => { navigate('/') }}>返回</button>
           </div>
           <div className="middle">
-            <button onClick={() => { setBoxNums(boxNums === 8 ? 12 : 8) }}>切换</button>
-            <button onClick={(e) => { playLoop(e, remarkArr) }}>播放</button>
+            <span><button onClick={() => { setReset(!reset); }}>重置</button></span>
+            <span>
+              <button onClick={() => { setBoxNums(boxNums === 8 ? 12 : 8) }}>切换</button>
+            </span>
+            <span>
+              <button onClick={(e) => { playLoop(e, remarkArr) }}>播放</button>
+            </span>
+            <span>
+              节奏：<InputNumber
+                style={{ width: 80 }}
+                max={220}
+                min={60}
+                defaultValue={120}
+                onChange={changeAudioRate}
+              />
+            </span>
           </div>
           <div className="finish">
             <button onClick={(e) => { debounceFinish(e, remarkArr) }}>完成</button>

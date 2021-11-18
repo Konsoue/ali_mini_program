@@ -30,7 +30,7 @@ $box-color: #FEF9EF;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
-  height: 20vh;
+  height: 23vh;
   -webkit-box-pack: center;
   -ms-flex-pack: center;
   justify-content: center;
@@ -121,13 +121,13 @@ $box-color: #FEF9EF;
   border-width: .2rem .4rem 1.2rem;
   border-style: solid;
   border-color: #666 #222 #111 #555;
-  height: 60%;
+  height: 65%;
   left: 100%;
   position: absolute;
   -webkit-transform: translateX(-50%);
   transform: translateX(-50%);
   top: 0;
-  width: 70%;
+  width: 85%;
   z-index: 1;
 }
 
@@ -172,9 +172,7 @@ $box-color: #FEF9EF;
   position: relative;
   border: $white-box-border;
   border-right: none;
-  border-top: none;
   background: $box-color;
-
 }
 
 .box-container:last-child .box-white {
@@ -193,9 +191,8 @@ $box-color: #FEF9EF;
   top: 0;
   width: 70%;
   z-index: 1;
-  // background: #fff;
   background: $box-color;
-  border-top: none;
+  border-top: $white-box-border;
 }
 
 .box-note {
@@ -206,7 +203,7 @@ $box-color: #FEF9EF;
 
 .box-white.selected {
   background: $white-box-color;
-  border-color: #fff;
+  border-left-color: #fff;
 }
 
 .box-black.selected {
@@ -232,9 +229,6 @@ $box-color: #FEF9EF;
   position: absolute;
   top: 2%;
   transform: translateY(50%);
-  button {
-    width: 50px;
-  }
 }
 
 .goback {
