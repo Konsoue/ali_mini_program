@@ -98,6 +98,67 @@ export const escapeHTML = str =>
     }[tag] || tag)
   );
 
+
+export const audioControl = {
+  getAudioBuffer: (url) => {
+    return new Promise((resolve, reject) => {
+      audioControl.createArrayBuffer(url)
+        .then(audioControl.cutAudioBuffer)
+        .then(resolve)
+        .catch(reject)
+    })
+  },
+  cutAudioBufferWidthUrl: (url, endSecond) => {
+    return new Promise((resolve, reject) => {
+      audioControl.getAudioBuffer(url)
+        .then((audioBuffer) => audioControl.cutAudioBuffer(audioBuffer, endSecond))
+        .then(audioBuffer => resolve(audioBuffer))
+        .catch(err => reject(err));
+    })
+  },
+  createArrayBuffer: (url) => {
+    return new Promise((resolve, reject) => {
+      const xhr = new XMLHttpRequest();
+      xhr.open('GET', url);
+      xhr.responseType = 'blob';
+      xhr.onload = e => {
+        const reader = new FileReader();
+        reader.readAsArrayBuffer(xhr.response);
+        reader.onload = (event) => {
+          const arrayBuffer = event.target.result;
+          const audioCtx = new AudioContext();
+          audioCtx.decodeAudioData(arrayBuffer)
+            .then(res => resolve(res))
+            .catch(err => reject(err));
+        }
+      };
+      xhr.send()
+    })
+  },
+  cutAudioBuffer: (audioBuffer, seconds) => {
+    // 音频时长、采样频率、声道数量
+    const { duration, sampleRate, numberOfChannels } = audioBuffer;
+    if (!is.Number(seconds)) seconds = duration;
+    // 截取前 seconds
+    const startOffset = 0;
+    const endOffset = sampleRate * seconds;
+    // 前 seconds 对应的帧数
+    const frameCount = endOffset - startOffset;
+    // 创建同样采用率、同样声道数量，长度是前3秒的空的 AudioBuffer
+    const newAudioBuffer = new AudioContext().createBuffer(numberOfChannels, frameCount, sampleRate);
+    // 创建临时的 Array 存放复制的buffer数据
+    const anotherArray = new Float32Array(frameCount);
+    // 声道的数据的复制和写入
+    const offset = 0;
+    for (let channel = 0; channel < numberOfChannels; channel++) {
+      audioBuffer.copyFromChannel(anotherArray, channel, startOffset);
+      newAudioBuffer.copyToChannel(anotherArray, channel, offset);
+    }
+    return newAudioBuffer;
+  }
+
+}
+
 // 防抖
 export const debounce = (fn, wait = 200, immediate = false) => {
   let timer = null
@@ -122,4 +183,3 @@ export const debounce = (fn, wait = 200, immediate = false) => {
       timer = null
     }, wait)
   }
-}
