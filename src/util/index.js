@@ -183,3 +183,4 @@ export const debounce = (fn, wait = 200, immediate = false) => {
       timer = null
     }, wait)
   }
+}
