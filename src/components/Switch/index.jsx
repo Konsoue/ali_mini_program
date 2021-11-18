@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { CheckCircleOutlined, DeleteOutlined } from '@ant-design/icons';
 import './index.scss';
 
 
@@ -13,6 +14,8 @@ class Switch extends Component {
 			flag: true,
 			dasharray: Math.PI * 100,
 			dashoffset: Math.PI * 100,
+			showElem:false,
+			deleteAll:false
 		};
 	}
 
@@ -44,34 +47,45 @@ class Switch extends Component {
 			currentTime: audio.currentTime,
 			duration: audio.duration,
 			dashoffset: audio.ended ? 0 : newDashoffset,
-			// flag1: audio.ended ? true : false
 		});
 	};
 	select = (e) => {
+		const {showElem} = this.state
 		console.log(e.currentTarget);
-		e.currentTarget.style.border="2px solid red";
+		this.setState({	showElem:!showElem})
+	};
+	removeBox = () => {
+		const {deleteAll} = this.state
+		this.setState({deleteAll:true})
 	}
 	render() {
 		const { src, id } = this.props;
 		const {
 			flag,
 			dasharray,
-			dashoffset
+			dashoffset,
+			showElem,
+			deleteAll
 		} = this.state;
 
 		return (
-			<div>
+			<div className={deleteAll ? 'deleteAll':null}>
+				<div className={`box-check ${showElem?'active':null} `}>
 					<svg width="100" height="100" onClick={(e) => this.select(e)} className="selectClick">
 						<circle r="50" cx="50" cy="50" fill="transparent" className="progress-background"></circle>
 						<circle r="50" cx="50" cy="50" fill="transparent" className="progress-bar" style={{ 'strokeDashoffset': dashoffset || 0, 'strokeDasharray': dasharray }}></circle>
 					</svg>
-				<audio
-					id={`audio${id}`}
-					preload="true"
-					src={src}
-					onTimeUpdate={this.updateTime}
-				>
-				</audio>
+					<CheckCircleOutlined className="check"/>
+					<DeleteOutlined className="delete" onClick={this.removeBox}/>
+				</div>
+					
+					<audio
+						id={`audio${id}`}
+						preload="true"
+						src={src}
+						onTimeUpdate={this.updateTime}
+					>
+					</audio>
 				<h1 className="title" onClick={this.playMusic}>{flag ? '播放' : '暂停'}</h1>
 			</div>
 		);
