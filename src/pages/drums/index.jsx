@@ -7,7 +7,8 @@ import { debounce, audioControl } from '../../util/index'
 import Crunker from 'crunker'
 import Enum from '../../util/Enum'
 import animateCSS from '../../util/animate'
-import { Button } from 'antd'
+import { Button, notification } from 'antd'
+import PubModal from '../../components/PubModal'
 
 import BigRackTom from '@/static/songs/BigRackTom.mp3'
 import Crash from '@/static/songs/Crash.mp3'
@@ -32,6 +33,7 @@ const TomMp3 = new Enum({ 'Crash': Crash, 'Hi-Hat': HiHatClosed, 'Snare': Snare,
 function Drums() {
   // 设置曲谱beat，用作记录旋律
   const [beat, setbeat] = useState(Array.from({ length: 12 }, () => new Array(7).fill(0)))
+  const [visible, setVisible] = useState(false);
   // 跳转到别的页面 navigate('xxxpath')
   const navigate = useNavigate();
   // 防抖暂存区arr，多次点击
@@ -151,6 +153,10 @@ function Drums() {
         }
       }
     }
+
+    if (!mergeBuffer) {
+      animateCSS(`#sequencer`, 'tada', 'animate__faster',)
+    }
     return mergeBuffer;
   }
 
@@ -158,14 +164,19 @@ function Drums() {
   const handleFinish = async () => {
     // 转mp3
     let crunker = new Crunker();
-    const musicBuffer = await crunkerMusic();
-    const mp3 = crunker.export(musicBuffer, "audio/mp3")
-    // 播放
-    document.querySelector('#Tom-all source').src = mp3.url;
-    document.querySelector('#Tom-all').load()
-    document.querySelector('#Tom-all').play()
-    // 下载
-    crunker.download(mp3.blob)
+    try {
+
+      const musicBuffer = await crunkerMusic();
+      const mp3 = crunker.export(musicBuffer, "audio/mp3")
+      setVisible(mp3.url)
+    } catch (e) {
+      console.error(e)
+      notification.error({
+        placement: 'topRight',
+        duration: 3,
+        message: '音频读取失败'
+      });
+    }
   }
 
   return (
@@ -202,6 +213,7 @@ function Drums() {
         onClick={() => {
           clearTimeout(param)
           clearCheck()
+          setbeat(Array.from({ length: beat.length }, () => new Array(7).fill(0)))
           animateCSS(`#drum-RetweetOutlined`, 'bounce', 'animate__faster',)
         }}>
         <RetweetOutlined rotate={90} id='drum-RetweetOutlined' />重置
@@ -211,8 +223,11 @@ function Drums() {
         onClick={() => {
           clearTimeout(param)
           clearCheck()
-          setbeat(Array.from({ length: (beat.length === 12) ? 8 : 12 }, () => new Array(7).fill(0)))
           animateCSS(`#drum-SwapOutlined`, 'bounce', 'animate__faster',)
+          animateCSS(`#sequencer`, 'backOutRight', 'animate__faster',).then(() => {
+            setbeat(Array.from({ length: (beat.length === 12) ? 8 : 12 }, () => new Array(7).fill(0)))
+            animateCSS(`#sequencer`, 'backInRight', 'animate__faster',)
+          })
         }}>
         <SwapOutlined rotate={90} id='drum-SwapOutlined' />{(beat.length === 12) ? 'x12' : 'x8'}
       </Button>
@@ -257,6 +272,12 @@ function Drums() {
         onClick={handleFinish}>
         完成<CheckOutlined />
       </Button>
+
+      <PubModal
+        key='drum'
+        visible={visible}
+        onCancel={() => setVisible(false)}
+      />
     </div>
   )
 }
