@@ -1,90 +1,85 @@
-import React from "react";
-import { Link } from 'react-router-dom';
-import { Progress, Checkbox, message } from 'antd'
-import { PlayCircleOutlined, PauseCircleOutlined } from '@ant-design/icons';
+import React, { useState } from "react";
+import { Checkbox, Card, Button, Modal, Input, message } from 'antd'
+import ViceTitle from "./ViceTitle";
+import SubTrack from "./SubTrack";
+import Crunker from 'crunker';
+import { LS } from '@/util'
 import './index.scss'
 
+const tips = {
+  'merge': '合并成功'
+}
+const { Group } = Checkbox;
 
-function ViceMusic() {
+function WriteModal(props) {
+  const { visible, setVisible, selectSubTrack } = props;
+  const [name, setName] = useState('');
 
-  const deleteViceMusic = () => {
-    const selectedItem = document.querySelectorAll('.ant-checkbox-checked')
-    const len = selectedItem.length
-    if (len === 0) {
-      message.warning('请选择要删除的副音轨')
+  const handleOk = async () => {
+    const crunker = new Crunker();
+    const buffers = await crunker.fetchAudio(...selectSubTrack)
+    const merged = crunker.mergeAudio(buffers);
+    const output = crunker.export(merged, 'audio/mp3');
+    const mainTrack = LS.getItem('mainTrack');
+    if (mainTrack) {
+      LS.setItem('mainTrack', [...mainTrack, { url: output.url, name, }])
     } else {
-      //console.log(selectedItem);
+      LS.setItem('mainTrack', [{ url: output.url, name, }])
     }
+    setVisible(false);
+    message(tips.merge)
+  }
+  const handleCancel = () => {
+    setVisible(false);
+  }
+  const handleChange = (e) => {
+    const value = e.target.value;
+    setName(value)
   }
 
-  const changePlayIcon = (index) => {
-    const viceMusicItemBtns = document.querySelectorAll('.vice-music-item-btn')
-    const pauseBtns = document.querySelectorAll('.pause-btn')
-    const playBtns = document.querySelectorAll('.play-btn')
-    if (viceMusicItemBtns[index].classList.contains('pause')) {
-      pauseBtns[index].style.display = 'block';
-      playBtns[index].style.display = 'none';
-      viceMusicItemBtns[index].classList.add('play')
-      viceMusicItemBtns[index].classList.remove('pause')
-    } else {
-      pauseBtns[index].style.display = 'none';
-      playBtns[index].style.display = 'block';
-      viceMusicItemBtns[index].classList.add('pause')
-      viceMusicItemBtns[index].classList.remove('play')
-    }
+  return (
+    <Modal visible={visible} maskClosable={false} onCancel={handleCancel} onOk={handleOk}>
+      输入主音轨的名称：<Input onChange={handleChange}></Input>
+    </Modal>
+  )
+}
+
+function ViceMusic(props) {
+  const [selectSubTrack, setSelect] = useState([])
+  const [visible, setVisible] = useState(false);
+
+  const handleChange = (checkedValue) => {
+    setSelect(checkedValue);
   }
 
-  const viceMusicArr = [{
-    name: '1',
-    url: '123',
-  }, {
-    name: '2',
-    url: '123',
-  }, {
-    name: '3',
-    url: '123',
-  }]
+  const viceMusicArr = LS.getItem('subTrack') || [];
 
+  const handleMergeAudio = () => {
+    setVisible(true)
+  }
 
   return (
     <div className="vice-music-container">
-      <div className="vice-music-header">
-        <h1 className="vice-music-title">已制副音轨</h1>
-        <Link to='/drum'>
-          <div className="make-btn">
-            <div className="make-icon">+</div>
-            <span>制作</span>
-          </div>
-        </Link>
-      </div>
-      <div className="vice-music-panel">
-        {viceMusicArr.map((_, i) => {
-          return (
-            <div className="vice-music-item" key={i}>
-              <Checkbox className="vice-music-checkbox" />
-              <h2 className="vice-music-item-title">Audio 01</h2>
-              <div className="vice-music-item-progress">
-                <div className="vice-music-item-btn pause" onClick={() => changePlayIcon(i)}>
-                  <PlayCircleOutlined className="play-btn" />
-                  <PauseCircleOutlined className="pause-btn" />
-                </div>
-                <div className="vice-music-item-bar">
-                  <Progress strokeColor="#99bcdd" showInfo={false} percent="100" />
-                </div>
-              </div>
-            </div>
-          )
-        })}
-
-      </div>
-      <div className="vice-music-footer">
-        <div className="delete-btn" onClick={() => deleteViceMusic()}>
-          <span>删除</span>
+      <Card
+        title={<ViceTitle />}
+        actions={[
+          <Button type="primary" danger>删除</Button>,
+          <Button onClick={handleMergeAudio} loading={visible}>合成</Button>
+        ]}
+      >
+        <div className="vice-music-panel">
+          <Group onChange={handleChange}>
+            {
+              viceMusicArr.map((_, i) => {
+                return (
+                  <SubTrack subTrack={_} index={i} key={JSON.stringify(_)} />
+                )
+              })
+            }
+          </Group>
         </div>
-        <div className="merge-btn">
-          <span>合成</span>
-        </div>
-      </div>
+      </Card>
+      <WriteModal selectSubTrack={selectSubTrack} setVisible={setVisible} visible={visible} />
     </div>
   )
 }
