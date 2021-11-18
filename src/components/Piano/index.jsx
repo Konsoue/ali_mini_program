@@ -1,11 +1,10 @@
-import React, { memo, useEffect, useState, Fragment } from 'react';
+import React, { memo, useEffect, useState } from 'react';
 import notes from "./notes.js";
 import pianoKeys from "./pianoKeys.js";
 import BoxContainer from './BoxContainer.jsx';
 import Crunker from 'crunker'
-import { audioControl, is } from '@/util'
+import { audioControl } from '@/util'
 import './index.scss';
-
 
 // 作为 box 遍历的数组
 const boxArr = [7, 6, 5, 4, 3, 2, 1, 0]; // 默认值：八行
@@ -122,7 +121,7 @@ const crunkerMusic = async () => {
       buffers = buffers.map(buffer => audioControl.cutAudioBuffer(buffer, 1));
       const buffer = crunker.mergeAudio(buffers);
       if (mergeBuffer) {
-        mergeBuffer = crunker.concatAudio([buffer])
+        mergeBuffer = crunker.concatAudio([mergeBuffer, buffer])
       } else {
         mergeBuffer = buffer;
       }
