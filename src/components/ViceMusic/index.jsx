@@ -5,7 +5,10 @@ import SubTrack from "./SubTrack";
 import { SS } from '@/util'
 import WriteModal from "./WriteModal";
 import './index.scss'
-
+import {
+  DeleteOutlined,
+  FullscreenExitOutlined
+} from '@ant-design/icons';
 const tips = {
   merge: '合并成功',
   subTrack: '请选择副音轨',
@@ -36,8 +39,8 @@ function ViceMusic(props) {
         style={{ height: '100%' }}
         title={<ViceTitle />}
         actions={[
-          <Button type="primary" danger>删除</Button>,
-          <Button onClick={handleMergeAudio} loading={visible}>合成</Button>
+          <Button type="primary" danger><DeleteOutlined />删除</Button>,
+          <Button className='btn-success' onClick={handleMergeAudio} loading={visible} ><FullscreenExitOutlined />合成</Button>
         ]}
       >
         <div className="vice-music-panel">
