@@ -1,10 +1,10 @@
 import 'animate.css';
 // https://animate.style/
 // css动画库
-const animateCSS = (element, animation, speed, backgroundcolor, prefix = 'animate__',) => new Promise((resolve, reject) => {
+const animateCSS = (element, animation, speed, backgroundcolor, dom, prefix = 'animate__',) => new Promise((resolve, reject) => {
   const animationName = `${prefix}${animation}`;
 
-  const node = document.querySelector(element);
+  const node = element ? document.querySelector(element) : dom;
   const color = node.style.backgroundColor
   node.style.background = backgroundcolor
   node.classList.add(`${prefix}animated`, animationName, speed);

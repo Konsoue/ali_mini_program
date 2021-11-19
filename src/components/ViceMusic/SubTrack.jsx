@@ -10,8 +10,8 @@ function Panel(props) {
   const { name, percent } = props;
 
   return (
-    <div className="panel-container">
-      <p style={{ textAlign: 'center' }}>{name}</p>
+    <div className="panel-container panel-audio">
+      <p>{name}</p>
       <div><Progress percent={percent} /></div>
     </div>
   )

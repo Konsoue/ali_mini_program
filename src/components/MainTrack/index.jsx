@@ -3,6 +3,9 @@ import { Button, message } from 'antd';
 import Switch from '@/components/Switch'
 import { SS } from '@/util'
 import './index.scss'
+import {
+  DeleteOutlined,
+} from '@ant-design/icons';
 
 function MainTrackComponent(props) {
   const { mainTracks, setFlash, flash } = props;
@@ -24,7 +27,7 @@ function MainTrackComponent(props) {
       <div className="main-track-header">
         <span className="title">主音轨</span>
         <span className="delete-main-track">
-          <Button type="primary" danger onClick={deleteAudios}>删除</Button>
+          <Button type="primary" danger onClick={deleteAudios}><DeleteOutlined />删除主音轨</Button>
         </span>
       </div>
       <div className="main-track-content">

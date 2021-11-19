@@ -84,12 +84,17 @@ const playLoop = (event, remarkArr) => {
     for (let j in remarkArr[i]) {
       if (remarkArr[i][j]) {
         const [play, noteName] = remarkArr[i][j];
+        console.log(noteName[Math.abs(i - 1)])
         play && sameLevel.push(noteName);
       }
     }
     if (sameLevel.length) {
       const timer = setTimeout(() => {
         sameLevel.forEach(note => playNode(note));
+        const dom = document.querySelectorAll('.boxes-container');
+        const len = dom.length
+        const num = Math.abs(i - len)
+        animateCSS('', 'bounce', 'animate__faster', 'transparent', dom[num])
         clearTimeout(timer);
       }, i * 500)
     }

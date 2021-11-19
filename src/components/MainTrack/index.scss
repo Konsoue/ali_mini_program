@@ -1,27 +1,30 @@
 .main-track-container {
-	margin-top: 20px;
+  margin-top: 20px;
 }
 
 .main-track-header {
-	position: relative;
-	height: 50px;
-	padding: 10px 0 0 0;
-	margin-bottom: 10px;
+  position: relative;
+  height: 50px;
+  padding: 10px 0 0 0;
+  margin-bottom: 10px;
 
-	.title {
-		font-size: 22px;
-	}
+  .title {
+    color: #2d4e76;
+    font-size: 28px !important;
+    user-select: none;
+    text-shadow: 1px 1px #979fa5;
+    letter-spacing: 2px;
+  }
 
-	.delete-main-track {
-		position: absolute;
-		right: 50px;
-	}
+  .delete-main-track {
+    position: absolute;
+    right: 50px;
+  }
 }
 
 .main-track-content {
-	display: flex;
-	flex-wrap: wrap;
-	flex-direction: row;
-	padding: 10px 0;
-
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  padding: 10px 0;
 }
