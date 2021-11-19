@@ -18,7 +18,7 @@ const { Group } = Checkbox;
 function ViceMusic(props) {
   const [selectSubTrack, setSelect] = useState([])
   const [visible, setVisible] = useState(false);
-
+  const { flash, setFlash } = props;
   const handleChange = (checkedValue) => {
     setSelect(checkedValue);
   }
@@ -33,13 +33,25 @@ function ViceMusic(props) {
     setVisible(true)
   }
 
+  const handleDeleteAudio = () => {
+    if (!selectSubTrack.length) {
+      message.destroy()
+      message.info(tips.subTrack);
+      return;
+    }
+    const subTracks = SS.getItem('audio') || [];
+    const newTracks = subTracks.filter(track => !selectSubTrack.includes(track.url))
+    SS.setItem('audio', newTracks);
+    setFlash(!flash);
+  }
+
   return (
     <div className="vice-music-container">
       <Card
         style={{ height: '100%' }}
         title={<ViceTitle />}
         actions={[
-          <Button type="primary" danger><DeleteOutlined />删除</Button>,
+          <Button type="primary" danger onClick={handleDeleteAudio} ><DeleteOutlined />删除</Button>,
           <Button className='btn-success' onClick={handleMergeAudio} loading={visible} ><FullscreenExitOutlined />合成</Button>
         ]}
       >
