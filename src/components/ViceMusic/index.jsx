@@ -62,6 +62,7 @@ function ViceMusic(props) {
   return (
     <div className="vice-music-container">
       <Card
+        style={{height:'100%'}}
         title={<ViceTitle />}
         actions={[
           <Button type="primary" danger>删除</Button>,

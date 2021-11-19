@@ -4,7 +4,7 @@ import { InputNumber } from 'antd';
 import pianoKeys from "./pianoKeys.js";
 import BoxesContainer from './BoxesContainer.jsx';
 import Crunker from 'crunker'
-import { audioControl, is, debounce, LS } from '@/util'
+import { audioControl, is, debounceTwo, LS } from '@/util'
 import { mapKeyCodeToNote, mapNoteToDom } from './map.js'
 import { useNavigate } from 'react-router-dom'
 import './index.scss';
@@ -144,7 +144,7 @@ function Piano(props) {
   useEffect(() => {
     const audios = document.querySelectorAll('.audioEle');
     audios.forEach(audio => {
-      audio.addEventListener('play', debounce(handleAudioPlay, 200, true))
+      audio.addEventListener('play', debounceTwo(handleAudioPlay, 200, true))
       audio.addEventListener('ended', handleAudioEnd)
       mapNoteToDom.set(audio.dataset.note, audio);
     })
@@ -181,7 +181,7 @@ function Piano(props) {
     console.log(LS)
   }
 
-  const debounceFinish = debounce(handleFinish, 1000)
+  const debounceTwoFinish = debounceTwo(handleFinish, 1000)
 
   return (
     <div className="background">
@@ -241,7 +241,7 @@ function Piano(props) {
             <Button
               type='text'
               style={{ left: '0', top: '0', transform: 'translate(-130%,0%)' }}
-              onClick={(e) => { debounceFinish(e, remarkArr) }}>完成<CheckOutlined /></Button>
+              onClick={(e) => { debounceTwoFinish(e, remarkArr) }}>完成<CheckOutlined /></Button>
           </div>
         </div>
         <div className="boxes-window">
