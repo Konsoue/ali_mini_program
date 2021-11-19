@@ -1,5 +1,5 @@
 import React, { useState, memo } from "react";
-import { Modal, Input, message, Form, Button } from 'antd'
+import { Modal, Input, message, Form, Button, notification } from 'antd'
 import { SS } from '@/util'
 import './index.scss'
 

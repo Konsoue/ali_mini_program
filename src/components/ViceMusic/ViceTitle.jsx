@@ -1,8 +1,9 @@
 import React, { memo, useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import { Button, Modal, Space } from 'antd'
-import drumPng from '@/static/images/drum.png'
-import pianoPng from '@/static/images/piano.png'
+import drumPng from '@/static/images/drum.jpg'
+import pianoPng from '@/static/images/piano.jpg'
+import { PlusOutlined } from '@ant-design/icons';
 
 
 function ViceTitle(props) {
@@ -16,7 +17,7 @@ function ViceTitle(props) {
   return (
     <div className="vice-title-container">
       <h1 className="vice-music-title">副音轨</h1>
-      <span className="vice-make"><Button type="primary" onClick={selectPage}>制作</Button></span>
+      <span className="vice-make"><Button type="primary" onClick={selectPage}> <PlusOutlined />制作</Button></span>
       <Modal title="选择乐器"
         maskClosable={false}
         visible={visible}

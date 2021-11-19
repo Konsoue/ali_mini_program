@@ -32,7 +32,7 @@ const TomMp3 = new Enum({ 'Crash': Crash, 'Hi-Hat': HiHatClosed, 'Snare': Snare,
 
 function Drums() {
   // 设置曲谱beat，用作记录旋律
-  const [beat, setbeat] = useState(Array.from({ length: 12 }, () => new Array(7).fill(0)))
+  const [beat, setbeat] = useState(Array.from({ length: 8 }, () => new Array(7).fill(0)))
   const [visible, setVisible] = useState(false);
   // 跳转到别的页面 navigate('xxxpath')
   const navigate = useNavigate();
