@@ -1,6 +1,7 @@
 .vice-music-container {
   width: 300px;
-  height: 550px;
+  height: 100%;
+  overflow: hidden;
   background-color: white;
   margin: 20px;
   display: flex;

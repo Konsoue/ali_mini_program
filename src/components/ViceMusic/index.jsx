@@ -52,7 +52,8 @@ function ViceMusic(props) {
     setSelect(checkedValue);
   }
 
-  const viceMusicArr = LS.getItem('subTrack') || [];
+  // const viceMusicArr = LS.getItem('subTrack') || [];
+  const viceMusicArr = JSON.parse(localStorage.getItem('audio')) || [];
 
   const handleMergeAudio = () => {
     setVisible(true)
