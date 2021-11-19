@@ -16,16 +16,18 @@ class Switch extends Component {
   playMusic = (e) => {
     const event = e || window.event;
     event.stopPropagation();
-    const { src } = this.props;
+    const { urls, name } = this.props;
     const { flag } = this.state
-    const audio = document.getElementById(src);
+    const audios = [];
+    urls.forEach(url => audios.push(document.getElementById(`${name}${url}`)))
+
     if (flag) {
-      audio.play()
+      audios.forEach(audio => audio.play())
       this.setState({
         flag: false,
       });
     } else {
-      audio.pause()
+      audios.forEach(audio => audio.pause())
       this.setState({
         flag: true,
       });
@@ -33,32 +35,45 @@ class Switch extends Component {
   }
 
   updateTime = () => {
-    const { src } = this.props;
+    const { urls, name } = this.props;
     const { dasharray, duration, currentTime, dashoffset } = this.state;
-    const audio = document.getElementById(src);
+    let newCurrent = 0, newDuration = 0;
+    urls.forEach(url => {
+      const audio = document.getElementById(`${name}${url}`);
+      newCurrent = Math.max(audio.currentTime, newCurrent);
+      newDuration = duration || Math.max(audio.duration, newDuration);
+    })
+
     const newDashoffset = (1 - currentTime / duration) * dasharray || dashoffset;
     this.setState({
-      currentTime: audio.currentTime,
-      duration: audio.duration,
-      dashoffset: audio.ended ? 0 : newDashoffset,
+      currentTime: newCurrent,
+      duration: duration || newDuration,
+      dashoffset: newDashoffset,
     });
   };
 
-  select = (url) => {
+  select = (name) => {
     const { showElem } = this.state
-    const { setSelect, selectAudioUrl } = this.props;
+    const { setSelect, selectAudioName } = this.props;
     if (!showElem) {
-      const newArr = [...selectAudioUrl, url];
+      const newArr = [...selectAudioName, name];
       setSelect(newArr);
     } else {
-      const newArr = selectAudioUrl.filter(curUrl => curUrl !== url);
+      const newArr = selectAudioName.filter(curName => curName !== name);
       setSelect(newArr);
     }
     this.setState({ showElem: !showElem })
   };
 
+  handleAudioEnd = (e) => {
+    const { duration } = this.state;
+    if (e.target.duration.toString() === duration.toString()) {
+      this.setState({ dashoffset: 0 })
+    }
+  }
+
   render() {
-    const { src } = this.props;
+    const { urls, name } = this.props;
     const {
       flag,
       dasharray,
@@ -75,14 +90,19 @@ class Switch extends Component {
           ></circle>
           <text className="text" x="50" y="50" >{flag ? '播放' : '暂停'}</text>
         </svg>
-        <CheckCircleOutlined className="check" onClick={() => { this.select(src) }} />
-        <audio
-          id={src}
-          preload="true"
-          src={src}
-          onTimeUpdate={this.updateTime}
-        >
-        </audio>
+        <CheckCircleOutlined className="check" onClick={() => { this.select(name) }} />
+        <div className="audio-boxes">
+          {
+            urls.map(src =>
+              <audio
+                id={`${name}${src}`}
+                preload="true"
+                src={src}
+                onTimeUpdate={this.updateTime}
+                onEnded={this.handleAudioEnd}
+              />)
+          }
+        </div>
       </div>
     );
   }

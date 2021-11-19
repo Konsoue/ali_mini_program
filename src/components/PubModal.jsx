@@ -1,13 +1,14 @@
 import React from 'react';
 import { Modal, Button, Form, Input, notification } from 'antd';
 import { useNavigate } from 'react-router-dom';
+import { SS } from '@/util'
 // import { Button, notification } from 'antd'
 
 const PubModal = (props) => {
   const { onCancel, visible } = props
   const navigate = useNavigate();
 
-  let read = JSON.parse(localStorage.getItem('audio')) || [];
+  let read = SS.getItem('audio') || [];
 
   const onFinish = (values) => {
     if (read?.length) {
@@ -23,7 +24,7 @@ const PubModal = (props) => {
     }
     // 更新localStorage
     read.push({ name: values.audioName, url: visible })
-    localStorage.setItem('audio', JSON.stringify(read));
+    SS.setItem('audio', read);
     onCancel()
 
     // 通知

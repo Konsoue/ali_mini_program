@@ -17,7 +17,14 @@ function ViceTitle(props) {
     <div className="vice-title-container">
       <h1 className="vice-music-title">副音轨</h1>
       <span className="vice-make"><Button type="primary" onClick={selectPage}>制作</Button></span>
-      <Modal title="Basic Modal" maskClosable={false} visible={visible} onOk={handleOk} onCancel={handleCancel}>
+      <Modal title="选择乐器"
+        maskClosable={false}
+        visible={visible}
+        onOk={handleOk}
+        onCancel={handleCancel}
+        okText="确定"
+        cancelText="取消"
+      >
         <div className="page-content">
           <Space size="large">
             <div className={`page-check ${pageUrl === '/drum' ? 'active' : ''}`}>

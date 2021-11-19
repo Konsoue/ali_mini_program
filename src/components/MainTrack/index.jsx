@@ -1,20 +1,19 @@
 import React, { memo, useState } from "react";
 import { Button } from 'antd';
 import Switch from '@/components/Switch'
-import { LS } from '@/util'
+import { SS } from '@/util'
 import './index.scss'
 
 function MainTrackComponent(props) {
   const { mainTracks, setFlash, flash } = props;
-  const [selectAudioUrl, setSelect] = useState([]);
+  const [selectAudioName, setSelect] = useState([]);
   const deleteAudios = () => {
     const newTracks = mainTracks.filter(track => {
-      return !selectAudioUrl.includes(track.url)
+      return !selectAudioName.includes(track.name)
     })
-    LS.setItem('mainTrack', newTracks);
+    SS.setItem('mainTrack', newTracks);
     setFlash(!flash)
   }
-
 
   return (
     <div className={`main-track-container `}>
@@ -28,10 +27,10 @@ function MainTrackComponent(props) {
         {mainTracks.map(track => {
           return (
             <Switch
-              key={track.url}
-              src={track.url}
+              key={track.name}
+              urls={track.urls}
               name={track.name}
-              selectAudioUrl={selectAudioUrl}
+              selectAudioName={selectAudioName}
               setSelect={setSelect}
             />
           )
