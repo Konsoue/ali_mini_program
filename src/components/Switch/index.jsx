@@ -3,7 +3,6 @@ import { Button } from 'antd';
 import { CheckCircleOutlined } from '@ant-design/icons';
 import './index.scss';
 
-let selectAudioUrl = [];
 
 class Switch extends Component {
   state = {
@@ -12,7 +11,6 @@ class Switch extends Component {
     dasharray: Math.PI * 100,
     dashoffset: Math.PI * 100,
     showElem: false,
-    deleteAll: false
   };
 
   playMusic = (e) => {
@@ -46,26 +44,18 @@ class Switch extends Component {
     });
   };
 
-  select = (e) => {
-    const event = e || window.event;
-    const dataset = event.target.dataset;
+  select = (url) => {
     const { showElem } = this.state
+    const { setSelect, selectAudioUrl } = this.props;
     if (!showElem) {
-      if (!selectAudioUrl.includes(dataset.url)) selectAudioUrl.push(dataset.url);
+      const newArr = [...selectAudioUrl, url];
+      setSelect(newArr);
     } else {
-      if (selectAudioUrl.includes(dataset.url)) selectAudioUrl = selectAudioUrl.filter(dataset.url);
+      const newArr = selectAudioUrl.filter(curUrl => curUrl !== url);
+      setSelect(newArr);
     }
     this.setState({ showElem: !showElem })
   };
-
-  removeBox = () => {
-    const { deleteAll } = this.state
-    this.setState({ deleteAll: true })
-  }
-
-  deleteAudios = () => {
-
-  }
 
   render() {
     const { src } = this.props;
@@ -74,34 +64,25 @@ class Switch extends Component {
       dasharray,
       dashoffset,
       showElem,
-      deleteAll
     } = this.state;
 
     return (
-      <div className={`main-track-container ${deleteAll ? 'deleteAll' : ''}`}>
-        <div className="main-track-header">
-          <span className="title">主音轨</span>
-          <span className="delete-main-track">
-            <Button type="primary" danger onClick={this.deleteAudios}>删除</Button>
-          </span>
-        </div>
-        <div className="main-track-content">
-          <div className={`box-check ${showElem ? 'active' : ''} `} data-url={src} onClick={this.select}>
-            <svg width="100" height="100" className="selectClick" onClick={this.playMusic}>
-              <circle r="50" cx="50" cy="50" fill="transparent" className="progress-background"></circle>
-              <circle r="50" cx="50" cy="50" fill="transparent" className="progress-bar" style={{ 'strokeDashoffset': dashoffset || 0, 'strokeDasharray': dasharray }}></circle>
-              <text className="text" x="50" y="50" >{flag ? '播放' : '暂停'}</text>
-            </svg>
-            <CheckCircleOutlined className="check" />
-            <audio
-              id={src}
-              preload="true"
-              src={src}
-              onTimeUpdate={this.updateTime}
-            >
-            </audio>
-          </div>
-        </div>
+      <div className={`box-check ${showElem ? 'active' : ''} `}  >
+        <svg width="100" height="100" className="selectClick" onClick={this.playMusic}>
+          <circle r="50" cx="50" cy="50" fill="transparent" className="progress-background"></circle>
+          <circle r="50" cx="50" cy="50" fill="transparent" className="progress-bar"
+            style={{ 'strokeDashoffset': dashoffset || 0, 'strokeDasharray': dasharray }}
+          ></circle>
+          <text className="text" x="50" y="50" >{flag ? '播放' : '暂停'}</text>
+        </svg>
+        <CheckCircleOutlined className="check" onClick={() => { this.select(src) }} />
+        <audio
+          id={src}
+          preload="true"
+          src={src}
+          onTimeUpdate={this.updateTime}
+        >
+        </audio>
       </div>
     );
   }
