@@ -52,7 +52,8 @@ function ViceMusic(props) {
     setSelect(checkedValue);
   }
 
-  const viceMusicArr = LS.getItem('subTrack') || [];
+  // const viceMusicArr = LS.getItem('subTrack') || [];
+  const viceMusicArr = JSON.parse(localStorage.getItem('audio')) || [];
 
   const handleMergeAudio = () => {
     setVisible(true)
@@ -61,6 +62,7 @@ function ViceMusic(props) {
   return (
     <div className="vice-music-container">
       <Card
+        style={{height:'100%'}}
         title={<ViceTitle />}
         actions={[
           <Button type="primary" danger>删除</Button>,
