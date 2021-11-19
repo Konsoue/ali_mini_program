@@ -4,7 +4,7 @@ import { InputNumber } from 'antd';
 import pianoKeys from "./pianoKeys.js";
 import BoxesContainer from './BoxesContainer.jsx';
 import Crunker from 'crunker'
-import { audioControl, is, debounceTwo, LS } from '@/util'
+import { audioControl, is, debounceTwo } from '@/util'
 import { mapKeyCodeToNote, mapNoteToDom } from './map.js'
 import { useNavigate } from 'react-router-dom'
 import './index.scss';
@@ -20,9 +20,6 @@ import {
   SwapLeftOutlined
 } from '@ant-design/icons';
 let audioRate = 1;
-const changeAudioRate = (value) => {
-  audioRate = Math.floor(value / 60);
-}
 
 /**
  * 添加全屏键盘事件监听
@@ -172,13 +169,6 @@ function Piano(props) {
         message: '音频读取失败'
       });
     }
-    const subTrack = LS.getItem('subTrack');
-    if (subTrack) {
-      LS.setItem('subTrack', { ...subTrack, 'piano2': output.url })
-    } else {
-      LS.setItem('subTrack', { 'piano1': output.url })
-    }
-    console.log(LS)
   }
 
   const debounceTwoFinish = debounceTwo(handleFinish, 1000)
@@ -226,16 +216,6 @@ function Piano(props) {
             >
               <PlayCircleOutlined id='drum-PlayCircleOutlined' />播放
             </Button>
-
-            {/* <span>
-              节奏：<InputNumber
-                style={{ width: 80 }}
-                max={220}
-                min={60}
-                defaultValue={120}
-                onChange={changeAudioRate}
-              />
-            </span> */}
           </div>
           <div className="finish">
             <Button

@@ -1,33 +1,32 @@
-import React, { Component } from "react";
-import { Button } from 'antd';
+import React, { Component, createRef } from "react";
 import { CheckCircleOutlined } from '@ant-design/icons';
 import './index.scss';
 
-let selectAudioUrl = [];
-
 class Switch extends Component {
+  svgRef = createRef(null);
   state = {
     //圆形播放器
     flag: true,
     dasharray: Math.PI * 100,
     dashoffset: Math.PI * 100,
     showElem: false,
-    deleteAll: false
   };
 
   playMusic = (e) => {
     const event = e || window.event;
     event.stopPropagation();
-    const { src } = this.props;
+    const { urls, name } = this.props;
     const { flag } = this.state
-    const audio = document.getElementById(src);
+    const audios = [];
+    urls.forEach(url => audios.push(document.getElementById(`${name}${url}`)))
+
     if (flag) {
-      audio.play()
+      audios.forEach(audio => audio.play())
       this.setState({
         flag: false,
       });
     } else {
-      audio.pause()
+      audios.forEach(audio => audio.pause())
       this.setState({
         flag: true,
       });
@@ -35,72 +34,77 @@ class Switch extends Component {
   }
 
   updateTime = () => {
-    const { src } = this.props;
+    const { urls, name } = this.props;
     const { dasharray, duration, currentTime, dashoffset } = this.state;
-    const audio = document.getElementById(src);
+    let newCurrent = 0, newDuration = 0;
+    urls.forEach(url => {
+      const audio = document.getElementById(`${name}${url}`);
+      newCurrent = Math.max(audio.currentTime, newCurrent);
+      newDuration = duration || Math.max(audio.duration, newDuration);
+    })
+
     const newDashoffset = (1 - currentTime / duration) * dasharray || dashoffset;
     this.setState({
-      currentTime: audio.currentTime,
-      duration: audio.duration,
-      dashoffset: audio.ended ? 0 : newDashoffset,
+      currentTime: newCurrent,
+      duration: duration || newDuration,
+      dashoffset: newDashoffset,
     });
   };
 
-  select = (e) => {
-    const event = e || window.event;
-    const dataset = event.target.dataset;
+  select = (name) => {
     const { showElem } = this.state
+    const { setSelect, selectAudioName } = this.props;
     if (!showElem) {
-      if (!selectAudioUrl.includes(dataset.url)) selectAudioUrl.push(dataset.url);
+      const newArr = [...selectAudioName, name];
+      setSelect(newArr);
     } else {
-      if (selectAudioUrl.includes(dataset.url)) selectAudioUrl = selectAudioUrl.filter(dataset.url);
+      const newArr = selectAudioName.filter(curName => curName !== name);
+      setSelect(newArr);
     }
     this.setState({ showElem: !showElem })
   };
 
-  removeBox = () => {
-    const { deleteAll } = this.state
-    this.setState({ deleteAll: true })
-  }
-
-  deleteAudios = () => {
-
+  handleAudioEnd = (e) => {
+    const { duration } = this.state;
+    if (e.target.duration.toString() === duration.toString()) {
+      this.setState({ dashoffset: 0, flag: true }, () =>{
+        // this.svgRef.current.click()
+        this.playMusic.call(this.svgRef.current)
+      });
+    }
   }
 
   render() {
-    const { src } = this.props;
+    const { urls, name } = this.props;
     const {
       flag,
       dasharray,
       dashoffset,
       showElem,
-      deleteAll
     } = this.state;
 
     return (
-      <div className={`main-track-container ${deleteAll ? 'deleteAll' : ''}`}>
-        <div className="main-track-header">
-          <span className="title">主音轨</span>
-          <span className="delete-main-track">
-            <Button type="primary" danger onClick={this.deleteAudios}>删除</Button>
-          </span>
-        </div>
-        <div className="main-track-content">
-          <div className={`box-check ${showElem ? 'active' : ''} `} data-url={src} onClick={this.select}>
-            <svg width="100" height="100" className="selectClick" onClick={this.playMusic}>
-              <circle r="50" cx="50" cy="50" fill="transparent" className="progress-background"></circle>
-              <circle r="50" cx="50" cy="50" fill="transparent" className="progress-bar" style={{ 'strokeDashoffset': dashoffset || 0, 'strokeDasharray': dasharray }}></circle>
-              <text className="text" x="50" y="50" >{flag ? '播放' : '暂停'}</text>
-            </svg>
-            <CheckCircleOutlined className="check" />
-            <audio
-              id={src}
-              preload="true"
-              src={src}
-              onTimeUpdate={this.updateTime}
-            >
-            </audio>
-          </div>
+      <div className={`box-check ${showElem ? 'active' : ''} `}  >
+        <svg width="100" ref={this.svgRef} height="100" className="selectClick" onClick={this.playMusic}>
+          <circle r="50" cx="50" cy="50" fill="transparent" className="progress-background"></circle>
+          <circle r="50" cx="50" cy="50" fill="transparent" className="progress-bar"
+            style={{ 'strokeDashoffset': dashoffset || 0, 'strokeDasharray': dasharray }}
+          ></circle>
+          <text className="text" x="50" y="50" >{flag ? '播放' : '暂停'}</text>
+        </svg>
+        <CheckCircleOutlined className="check" onClick={() => { this.select(name) }} />
+        <div className="audio-boxes">
+          {
+            urls.map(src =>
+              <audio
+                key={`${name}${src}`}
+                id={`${name}${src}`}
+                preload="true"
+                src={src}
+                onTimeUpdate={this.updateTime}
+                onEnded={this.handleAudioEnd}
+              />)
+          }
         </div>
       </div>
     );
