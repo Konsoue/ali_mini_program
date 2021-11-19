@@ -1,5 +1,5 @@
 import React, { memo, useState } from "react";
-import { Button } from 'antd';
+import { Button, message } from 'antd';
 import Switch from '@/components/Switch'
 import { SS } from '@/util'
 import './index.scss'
@@ -8,6 +8,10 @@ function MainTrackComponent(props) {
   const { mainTracks, setFlash, flash } = props;
   const [selectAudioName, setSelect] = useState([]);
   const deleteAudios = () => {
+    if (!selectAudioName.length) {
+      message.info('请选择要删除的主音轨');
+      return;
+    }
     const newTracks = mainTracks.filter(track => {
       return !selectAudioName.includes(track.name)
     })

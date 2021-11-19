@@ -1,10 +1,9 @@
-import React, { Component } from "react";
-import { Button } from 'antd';
+import React, { Component, createRef } from "react";
 import { CheckCircleOutlined } from '@ant-design/icons';
 import './index.scss';
 
-
 class Switch extends Component {
+  svgRef = createRef(null);
   state = {
     //圆形播放器
     flag: true,
@@ -68,7 +67,10 @@ class Switch extends Component {
   handleAudioEnd = (e) => {
     const { duration } = this.state;
     if (e.target.duration.toString() === duration.toString()) {
-      this.setState({ dashoffset: 0 })
+      this.setState({ dashoffset: 0, flag: true }, () =>{
+        // this.svgRef.current.click()
+        this.playMusic.call(this.svgRef.current)
+      });
     }
   }
 
@@ -83,7 +85,7 @@ class Switch extends Component {
 
     return (
       <div className={`box-check ${showElem ? 'active' : ''} `}  >
-        <svg width="100" height="100" className="selectClick" onClick={this.playMusic}>
+        <svg width="100" ref={this.svgRef} height="100" className="selectClick" onClick={this.playMusic}>
           <circle r="50" cx="50" cy="50" fill="transparent" className="progress-background"></circle>
           <circle r="50" cx="50" cy="50" fill="transparent" className="progress-bar"
             style={{ 'strokeDashoffset': dashoffset || 0, 'strokeDasharray': dasharray }}
@@ -95,6 +97,7 @@ class Switch extends Component {
           {
             urls.map(src =>
               <audio
+                key={`${name}${src}`}
                 id={`${name}${src}`}
                 preload="true"
                 src={src}
