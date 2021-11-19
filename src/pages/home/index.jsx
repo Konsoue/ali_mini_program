@@ -10,7 +10,7 @@ const { Header, Footer, Sider, Content } = Layout;
 function Home() {
 
   return (
-    <div>
+    <div id='homePage'>
       <Layout>
         <Sider>
           <ViceMusic />
