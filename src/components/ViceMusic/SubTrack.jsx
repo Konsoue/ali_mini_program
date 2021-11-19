@@ -15,8 +15,8 @@ function Panel(props) {
   }
 
   return (
-    <div>
-      <p style={{ textAlign: 'center' }}>{name}</p>
+    <div className='panel-audio'>
+      <p>{name}</p>
       <Progress percent={percent} />
       <audio src={url} onTimeUpdate={changePercent} />
     </div>

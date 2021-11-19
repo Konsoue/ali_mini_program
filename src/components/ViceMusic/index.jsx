@@ -5,7 +5,10 @@ import SubTrack from "./SubTrack";
 import Crunker from 'crunker';
 import { LS } from '@/util'
 import './index.scss'
-
+import {
+  DeleteOutlined,
+  FullscreenExitOutlined
+} from '@ant-design/icons';
 const tips = {
   'merge': '合并成功'
 }
@@ -62,11 +65,11 @@ function ViceMusic(props) {
   return (
     <div className="vice-music-container">
       <Card
-        style={{height:'100%'}}
+        style={{ height: '100%' }}
         title={<ViceTitle />}
         actions={[
-          <Button type="primary" danger>删除</Button>,
-          <Button onClick={handleMergeAudio} loading={visible}>合成</Button>
+          <Button type="primary" danger><DeleteOutlined />删除</Button>,
+          <Button className='btn-success' onClick={handleMergeAudio} loading={visible} ><FullscreenExitOutlined />合成</Button>
         ]}
       >
         <div className="vice-music-panel">
@@ -80,9 +83,9 @@ function ViceMusic(props) {
             }
           </Group>
         </div>
-      </Card>
+      </Card >
       <WriteModal selectSubTrack={selectSubTrack} setVisible={setVisible} visible={visible} />
-    </div>
+    </div >
   )
 }
 
