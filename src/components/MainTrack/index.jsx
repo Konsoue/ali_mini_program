@@ -3,12 +3,14 @@ import { Button, message } from 'antd';
 import Switch from '@/components/Switch'
 import { SS } from '@/util'
 import './index.scss'
+import DownModal from './DownModal'
 import {
   DeleteOutlined,
 } from '@ant-design/icons';
 
 function MainTrackComponent(props) {
   const { mainTracks, setFlash, flash } = props;
+  const [visible, setVisible] = useState(false);
   const [selectAudioName, setSelect] = useState([]);
   const deleteAudios = () => {
     if (!selectAudioName.length) {
@@ -26,9 +28,18 @@ function MainTrackComponent(props) {
     <div className={`main-track-container `}>
       <div className="main-track-header">
         <span className="title">主音轨</span>
+        {/* <span className="download-main-track">
+          <Button type="primary" onClick={() => setVisible(true)}>下载主音轨</Button>
+        </span> */}
         <span className="delete-main-track">
           <Button type="primary" danger onClick={deleteAudios}><DeleteOutlined />删除主音轨</Button>
         </span>
+        <DownModal
+          visible={visible}
+          setVisible={setVisible}
+          mainTracks={mainTracks}
+          selectAudioName={selectAudioName}
+        />
       </div>
       <div className="main-track-content">
         {mainTracks.map(track => {
@@ -43,6 +54,7 @@ function MainTrackComponent(props) {
           )
         })}
       </div>
+
     </div>
   )
 }
