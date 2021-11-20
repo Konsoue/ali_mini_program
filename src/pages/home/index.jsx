@@ -3,6 +3,7 @@ import MainTrack from "@/components/MainTrack";
 import { Layout } from 'antd';
 import ViceMusic from '@/components/ViceMusic'
 import { SS } from '@/util'
+import A50 from '@/static/songs/a50.mp3';
 import './index.scss';
 
 const { Sider } = Layout;
@@ -11,7 +12,10 @@ function Home() {
   const [flash, setFlash] = useState(false); // 重新渲染页面
 
   const mainTracks = useMemo(() => {
-    return SS.getItem('mainTrack') || [];
+    let res = [];
+    for (let i = 0; i < 25; i++) res.push({ name: '1', urls: [A50] });
+    return res;
+    // return SS.getItem('mainTrack') || [];
   }, [flash])
 
   return (
