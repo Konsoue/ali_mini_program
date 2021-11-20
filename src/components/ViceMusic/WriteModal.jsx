@@ -45,6 +45,7 @@ function WriteModal(props) {
       okText="确定"
       cancelText="取消"
       footer={false}
+      onCancel={handleCancel}
     >
       <Form
         onFinish={handleOk}
