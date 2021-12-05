@@ -24,7 +24,7 @@
 
 3. fetch 远程 master 的代码，但此时其实没有真的合并到你的分支。`git fetch origin master`
 
-4. 通过这个命令，真正把远程的 master 合并到自己的分支。如果有冲突，解决冲突。`git merge origin master`
+4. 通过这个命令，真正把远程的 master 合并到自己的分支。如果有冲突，解决冲突。`git merge origin/master`
 
 5. 接着，`git add *` 并且 `git commit -m '你的提交内容说明'`
 
