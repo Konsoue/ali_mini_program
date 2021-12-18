@@ -59,7 +59,7 @@ function WriteModal(props) {
           }]}
           initialValue={`Audio-${mainTrack?.length || 0}`}
         >
-          <Input />
+          <Input maxLength={20}/>
         </Item>
         <Form.Item
           wrapperCol={{

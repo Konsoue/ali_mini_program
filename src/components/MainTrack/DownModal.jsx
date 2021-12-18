@@ -71,7 +71,7 @@ function DownModal(props) {
           }]}
           initialValue={`mainTrack`}
         >
-          <Input />
+          <Input maxLength={20} />
         </Item>
         <Form.Item
           wrapperCol={{

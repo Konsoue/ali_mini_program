@@ -92,7 +92,7 @@ const PubModal = (props) => {
 
           initialValue={`Audio-${read?.length || 0}`}
         >
-          <Input />
+          <Input  maxLength={20}/>
         </Form.Item>
         <Form.Item
           wrapperCol={{

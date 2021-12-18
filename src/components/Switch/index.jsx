@@ -83,32 +83,35 @@ class Switch extends Component {
     } = this.state;
 
     return (
-      <div className={`box-check ${showElem ? 'active' : ''} `}  >
-        <svg width="100" ref={this.svgRef} height="100" className="selectClick" onClick={this.playMusic}>
-          <circle r="50" cx="50" cy="50" fill="transparent" className="progress-background" ></circle>
-          <circle r="50" cx="50" cy="50" fill="transparent" className="progress-bar"
-            style={{ 'strokeDashoffset': dashoffset || 0, 'strokeDasharray': dasharray }}
-          ></circle>
-          {flag ?
-            (<svg t="1637325392497" style={{ userSelect: 'none', cursor: 'pointer' }} x="30" y="25" className="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1812" width="48" height="48"><path d="M128 138.666667c0-47.232 33.322667-66.666667 74.176-43.562667l663.146667 374.954667c40.96 23.168 40.853333 60.8 0 83.882666L202.176 928.896C161.216 952.064 128 932.565333 128 885.333333v-746.666666z" fill="#2c2c2c" p-id="1813"></path></svg>)
-            : (<svg t="1637325442841" style={{ userSelect: 'none', cursor: 'pointer' }} x="25" y="25" className="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4711" width="48" height="48"><path d="M128 106.858667C128 94.976 137.621333 85.333333 149.12 85.333333h85.76c11.648 0 21.12 9.6 21.12 21.525334V917.12c0 11.882667-9.621333 21.525333-21.12 21.525333H149.12A21.290667 21.290667 0 0 1 128 917.141333V106.88z m640 0c0-11.882667 9.621333-21.525333 21.12-21.525334h85.76c11.648 0 21.12 9.6 21.12 21.525334V917.12c0 11.882667-9.621333 21.525333-21.12 21.525333h-85.76a21.290667 21.290667 0 0 1-21.12-21.525333V106.88z" fill="#2c2c2c" p-id="4712"></path></svg>)}
-        </svg>
-        <CheckCircleOutlined className="check" onClick={() => { this.select(name) }} />
-        <div className="audio-boxes">
-          {
-            urls.map(src =>
-              <audio
-                key={`${name}${src}`}
-                id={`${name}${src}`}
-                preload="true"
-                src={src}
-                onTimeUpdate={this.updateTime}
-                onEnded={this.handleAudioEnd}
-              />)
-          }
+      <div className="track-container">
+        <div className={`box-check ${showElem ? 'active' : ''} `}  >
+          <svg width="100" ref={this.svgRef} height="100" className="selectClick" onClick={this.playMusic}>
+            <circle r="50" cx="50" cy="50" fill="transparent" className="progress-background" ></circle>
+            <circle r="50" cx="50" cy="50" fill="transparent" className="progress-bar"
+              style={{ 'strokeDashoffset': dashoffset || 0, 'strokeDasharray': dasharray }}
+            ></circle>
+            {flag ?
+              (<svg t="1637325392497" style={{ userSelect: 'none', cursor: 'pointer' }} x="30" y="25" className="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1812" width="48" height="48"><path d="M128 138.666667c0-47.232 33.322667-66.666667 74.176-43.562667l663.146667 374.954667c40.96 23.168 40.853333 60.8 0 83.882666L202.176 928.896C161.216 952.064 128 932.565333 128 885.333333v-746.666666z" fill="#2c2c2c" p-id="1813"></path></svg>)
+              : (<svg t="1637325442841" style={{ userSelect: 'none', cursor: 'pointer' }} x="25" y="25" className="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4711" width="48" height="48"><path d="M128 106.858667C128 94.976 137.621333 85.333333 149.12 85.333333h85.76c11.648 0 21.12 9.6 21.12 21.525334V917.12c0 11.882667-9.621333 21.525333-21.12 21.525333H149.12A21.290667 21.290667 0 0 1 128 917.141333V106.88z m640 0c0-11.882667 9.621333-21.525333 21.12-21.525334h85.76c11.648 0 21.12 9.6 21.12 21.525334V917.12c0 11.882667-9.621333 21.525333-21.12 21.525333h-85.76a21.290667 21.290667 0 0 1-21.12-21.525333V106.88z" fill="#2c2c2c" p-id="4712"></path></svg>)}
+          </svg>
+          <CheckCircleOutlined className="check" onClick={() => { this.select(name) }} />
+          <div className="audio-boxes">
+            {
+              urls.map(src =>
+                <audio
+                  key={`${name}${src}`}
+                  id={`${name}${src}`}
+                  preload="true"
+                  src={src}
+                  onTimeUpdate={this.updateTime}
+                  onEnded={this.handleAudioEnd}
+                />)
+            }
+          </div>
         </div>
-        <div className="track-name">{name}.mp3</div>
+        <div className="track-name">{name}</div>
       </div>
+
     );
   }
 }
