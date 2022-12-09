@@ -1,19 +1,24 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Modal, Button, Form, Input, notification } from 'antd';
 import { useNavigate } from 'react-router-dom';
-import { SS } from '@/util'
-// import { Button, notification } from 'antd'
+import { audioDB } from '@/util'
 
 const PubModal = (props) => {
-  const { onCancel, visible } = props
+  const { onCancel, visible, audioData } = props;
+  const [read, setRead] = useState([]);
   const navigate = useNavigate();
 
-  let read = SS.getItem('audio') || [];
 
-  const onFinish = (values) => {
+  useEffect(() => {
+    audioDB.subTrack?.getAll('subTrack')?.then(res => {
+      setRead(res.map(item => item.name) || []);
+    })
+  }, [])
+
+  const onFinish = async (values) => {
     if (read?.length) {
       for (let i in read) {
-        if (read[i].name === values.audioName) {
+        if (read[i] === values.audioName) {
           return (notification.error({
             placement: 'topRight',
             duration: 3,
@@ -22,15 +27,12 @@ const PubModal = (props) => {
         }
       }
     }
-    // 更新localStorage
-    read.push({ name: values.audioName, url: visible })
-    SS.setItem('audio', read);
-    onCancel()
 
+    // 更新indexedDB
+    await audioDB.subTrack.add('subTrack', { name: values.audioName, blob: audioData.blob })
+    onCancel()
     // 通知
-    let paramNot = setTimeout(() => {
-      navigate('/')
-    }, 2000)
+    let paramNot = setTimeout(() => navigate('/'), 2000);
     const key = `open${Date.now()}`;
     notification.success({
       placement: 'topRight',
@@ -47,16 +49,14 @@ const PubModal = (props) => {
         </Button>
       )
     })
+
   };
 
   return (
     <Modal
       title="编辑副音轨"
       centered
-      // key={props?.key}
       visible={visible}
-      // onOk={() => setVisible(false)}
-      // onCancel={onCancel}
       footer={false}
       width={400}
       destroyOnClose={true}
@@ -72,13 +72,8 @@ const PubModal = (props) => {
         wrapperCol={{
           span: 16,
         }}
-        // initialValues={{
-        //   remember: true,
-        // }}
         onFinish={onFinish}
-        // onFinishFailed={onFinishFailed}
         autoComplete="off"
-      // initialValues={{ audioName: `Audio-${read?.length || 0}` }}
       >
         <Form.Item
           label="音轨名"
@@ -92,7 +87,7 @@ const PubModal = (props) => {
 
           initialValue={`Audio-${read?.length || 0}`}
         >
-          <Input  maxLength={20}/>
+          <Input maxLength={20} />
         </Form.Item>
         <Form.Item
           wrapperCol={{
@@ -100,7 +95,7 @@ const PubModal = (props) => {
           }}
         >
           <audio id="modal-audio" preload="auto" controls >
-            <source src={visible} type="audio/mp3" />
+            <source src={audioData.url} type="audio/mp3" />
           </audio>
         </Form.Item>
 

@@ -136,6 +136,7 @@ function Piano(props) {
   const [reset, setReset] = useState(false);
   const [boxNums, setBoxNums] = useState(8);
   const [visible, setVisible] = useState(false);
+  const [audioData, setAudio] = useState({});
   const navigate = useNavigate();
 
   const remarkArr = useMemo(() => {
@@ -165,7 +166,8 @@ function Piano(props) {
       if (is.Void(audioBuffer)) return;
       const crunker = new Crunker();
       const output = crunker.export(audioBuffer, 'audio/mp3')
-      setVisible(output.url)
+      setAudio(output);
+      setVisible(true)
     } catch (e) {
       console.error(e)
       notification.error({
@@ -267,6 +269,7 @@ function Piano(props) {
       <PubModal
         key='piano'
         visible={visible}
+        audioData={audioData}
         onCancel={() => setVisible(false)}
       />
     </div >)
