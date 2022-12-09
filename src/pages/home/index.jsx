@@ -1,18 +1,27 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useLayoutEffect } from "react";
 import MainTrack from "@/components/MainTrack";
 import { Layout } from 'antd';
 import ViceMusic from '@/components/ViceMusic'
-import { SS } from '@/util'
+import { audioDB } from '@/util'
 import './index.scss';
 
 const { Sider } = Layout;
 
 function Home() {
   const [flash, setFlash] = useState(false); // 重新渲染页面
+  const [mainTracks, setMainTracks] = useState([]);
 
-  const mainTracks = useMemo(() => {
-    return SS.getItem('mainTrack') || [];
+  useLayoutEffect(() => {
+    for (let url of Object.entries(audioDB.urls.mainTrack)) URL.revokeObjectURL(url);
+    audioDB.mainTrack?.getAll('mainTrack').then(tracks => {
+      tracks.forEach(track => {
+        track.url = URL.createObjectURL(track.blob);
+        audioDB.urls.mainTrack[track.name] = track.url;
+      })
+      setMainTracks(tracks);
+    }).catch(err => console.error(err))
   }, [flash])
+
 
   return (
     <div id='homePage'>

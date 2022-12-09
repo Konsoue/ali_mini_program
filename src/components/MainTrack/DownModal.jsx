@@ -34,7 +34,6 @@ function DownModal(props) {
       const merged = crunker.mergeAudio(buffers);
       const output = crunker.export(merged);
       const reader = new FileReader();
-      console.log(output.blob)
       reader.onload = function () {
         zip.file(`${tracks[i].name}.wav`, this.result, { binary: true });
       }

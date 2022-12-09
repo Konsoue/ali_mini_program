@@ -34,6 +34,7 @@ function Drums() {
   // 设置曲谱beat，用作记录旋律
   const [beat, setbeat] = useState(Array.from({ length: 8 }, () => new Array(7).fill(0)))
   const [visible, setVisible] = useState(false);
+  const [audioData, setAudio] = useState({});
   // 跳转到别的页面 navigate('xxxpath')
   const navigate = useNavigate();
   // 防抖暂存区arr，多次点击
@@ -168,7 +169,8 @@ function Drums() {
 
       const musicBuffer = await crunkerMusic();
       const mp3 = crunker.export(musicBuffer, "audio/mp3")
-      setVisible(mp3.url)
+      setAudio(mp3);
+      setVisible(true);
     } catch (e) {
       console.error(e)
       notification.error({
@@ -276,6 +278,7 @@ function Drums() {
       <PubModal
         key='drum'
         visible={visible}
+        audioData={audioData}
         onCancel={() => setVisible(false)}
       />
     </div>

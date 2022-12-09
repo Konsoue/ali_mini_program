@@ -1,8 +1,7 @@
 import React, { useState, memo, createRef } from "react";
-import { useNavigate } from 'react-router-dom';
 import { Progress, Checkbox, Card } from 'antd'
 import { PlayCircleOutlined, PauseCircleOutlined, DeleteOutlined } from '@ant-design/icons';
-import { SS } from '@/util'
+import { audioDB } from '@/util'
 import './index.scss'
 
 
@@ -44,19 +43,18 @@ function SubTrack(props) {
   const { subTrack: { url, name }, flash, setFlash } = props;
   const [percent, setPercent] = useState(0);
 
-  const deleteViceMusic = (e, url) => {
-    const subTracks = SS.getItem('audio');
-    const newTracks = subTracks.filter(track => track.url !== url);
-    SS.setItem('audio', newTracks);
+  const deleteViceMusic = (e, name) => {
+    URL.revokeObjectURL(audioDB.urls.subTrack[name] || '');
+    audioDB.subTrack.delete('subTrack', name);
     setFlash(!flash)
   }
 
   return (
     <Card
       actions={[
-        <Checkbox key={url} value={url} />,
+        <Checkbox key={url} value={{ url, name }} />,
         <PlaySong url={url} setPercent={setPercent} />,
-        <DeleteOutlined key={url} data-url={url} onClick={(e) => { deleteViceMusic(e, url) }} />
+        <DeleteOutlined key={url} data-url={url} onClick={(e) => { deleteViceMusic(e, name) }} />
       ]}
     >
       <Panel url={url} name={name} percent={percent} />
